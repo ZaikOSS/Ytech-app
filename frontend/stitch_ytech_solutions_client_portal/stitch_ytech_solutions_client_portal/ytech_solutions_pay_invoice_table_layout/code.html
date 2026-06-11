@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pay Invoice</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#005236",
+                    "inverse-on-surface": "#eff1f3",
+                    "primary": "#091426",
+                    "primary-container": "#1e293b",
+                    "surface-bright": "#f7f9fb",
+                    "surface": "#f7f9fb",
+                    "background": "#f7f9fb",
+                    "on-tertiary-container": "#8191a9",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#545f73",
+                    "on-surface": "#191c1e",
+                    "surface-variant": "#e0e3e5",
+                    "outline-variant": "#c5c6cd",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "error-container": "#ffdad6",
+                    "surface-container-high": "#e6e8ea",
+                    "on-error": "#ffffff",
+                    "outline": "#75777d",
+                    "primary-fixed-dim": "#bcc7de",
+                    "surface-container-highest": "#e0e3e5",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "on-surface-variant": "#45474c",
+                    "on-primary-container": "#8590a6",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-container": "#1a2a3e",
+                    "on-secondary-fixed": "#002113",
+                    "secondary": "#006c49",
+                    "primary-fixed": "#d8e3fb",
+                    "on-background": "#191c1e",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "surface-dim": "#d8dadc",
+                    "tertiary": "#041528",
+                    "secondary-fixed-dim": "#4edea3",
+                    "secondary-container": "#6cf8bb",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#00714d",
+                    "on-primary-fixed": "#111c2d",
+                    "tertiary-fixed": "#d3e4fe",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#eceef0",
+                    "secondary-fixed": "#6ffbbe",
+                    "inverse-primary": "#bcc7de",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "32px",
+                    "container-max": "1280px",
+                    "stack-lg": "64px",
+                    "margin-x": "40px",
+                    "gutter": "32px",
+                    "stack-sm": "16px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "label-sm": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "button": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "display-lg-mobile": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "1",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "button": [
+                            "15px",
+                            {
+                                    "lineHeight": "1",
+                                    "letterSpacing": "0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "letterSpacing": "0",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .hover-shadow-subtle {
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .hover-shadow-subtle:hover {
+            box-shadow: 0 4px 20px rgba(30, 41, 59, 0.05);
+        }
+        
+        /* Custom input focus states based on Design System */
+        .ds-input:focus {
+            border-color: #10B981 !important; /* Sharp Emerald Green focus */
+            outline: none;
+            box-shadow: 0 0 0 1px #10B981 !important;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background min-h-screen flex items-center justify-center p-4 antialiased">
+<!-- Card Container -->
+<div class="w-full max-w-md bg-surface-container-lowest rounded-xl border border-surface-variant overflow-hidden hover-shadow-subtle relative z-10">
+<!-- Header -->
+<div class="bg-surface-container-low py-6 px-8 text-center border-b border-surface-variant">
+<h1 class="font-headline-md text-headline-md text-primary-container m-0">Pay Invoice</h1>
+</div>
+<!-- Content Area -->
+<div class="p-8 flex flex-col gap-8">
+<!-- Accepted Cards Row -->
+<div class="flex items-center gap-4 justify-start text-on-surface-variant"><div class="flex justify-center gap-2 w-full mb-2">https://lh3.googleusercontent.com/aida-public/AB6AXuCbSNbV2A6r2MdeFir60PJWfMbFw1idrMfCEEt91HB00Y-f00NhDizhz7KtUccyAB-CcU42mLnZ9UxHlcKvVU2kzFjORU8GxSjphrj45UAu851XLvt7ODOYD-JDP_SQMQjrycanO7NMPLJnieiZ1A_FxXFbcqhxJuiC4ViNcX7Os-B_SN3LSd0nujEhA1fEO8a_6W8En-qAsZteDv03aN3CTGhG-haiDgM1-O_pXFB2kLhgLo0xp7thPcqAshfKWbqg5LsROX84GOM</div></div>
+<!-- Amount Sector -->
+<div class="flex flex-col gap-2 mb-4"><span class="font-label-sm text-label-sm text-on-surface-variant">Payment amount</span><div class="flex justify-between items-center"><div class="font-headline-md text-headline-md text-primary-container">$500.00</div><button class="bg-surface-container-low border border-outline-variant px-4 py-1 rounded text-sm font-medium hover:bg-surface-container-high transition-colors" type="button">Edit</button></div></div>
+<!-- Core Inputs Form -->
+<form class="flex flex-col gap-6" onsubmit="event.preventDefault();"><div class="flex flex-col gap-4"><div class="flex flex-col gap-1"><label class="font-label-sm text-label-sm text-on-surface-variant" for="cardName">Name on card</label><input class="ds-input w-full px-3 py-2 bg-white border border-outline-variant rounded font-body-md text-body-md text-on-surface placeholder:text-outline" id="cardName" name="cardName" type="text"/></div><div class="flex flex-col gap-1"><label class="font-label-sm text-label-sm text-on-surface-variant" for="cardDetails">Card number</label><input class="ds-input w-full px-3 py-2 bg-white border border-outline-variant rounded font-body-md text-body-md text-on-surface placeholder:text-outline" id="cardDetails" name="cardDetails" placeholder="PAN|MM|YYYY|CVV (Example: 1442216444355245|02|2031|795)" required="" type="text"/></div><div class="grid grid-cols-2 gap-4"><div class="flex flex-col gap-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Expires</label><input class="ds-input w-full px-3 py-2 bg-white border border-outline-variant rounded font-body-md text-body-md text-on-surface placeholder:text-outline" placeholder="MM / YY" type="text"/></div><div class="flex flex-col gap-1"><label class="font-label-sm text-label-sm text-on-surface-variant">Security code</label><div class="relative"><input class="ds-input w-full px-3 py-2 bg-white border border-outline-variant rounded font-body-md text-body-md text-on-surface placeholder:text-outline" type="text"/><span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-sm">help</span></div></div></div><div class="flex flex-col gap-1"><label class="font-label-sm text-label-sm text-on-surface-variant">ZIP code</label><div class="relative"><input class="ds-input w-full px-3 py-2 bg-white border border-outline-variant rounded font-body-md text-body-md text-on-surface placeholder:text-outline" type="text"/><span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline text-sm">help</span></div></div></div><button class="mt-4 w-full bg-[#84cc16] hover:bg-[#65a30d] text-white py-3 px-6 rounded font-button text-button flex items-center justify-center gap-2 transition-colors duration-200" type="submit"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">lock</span> Pay $500.00</button></form>
+<div class="text-center mt-2">
+<p class="font-label-sm text-label-sm text-outline font-normal flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-xs">verified_user</span>
+                    Secure encrypted transaction
+                </p>
+</div>
+</div>
+</div>
+</body></html>

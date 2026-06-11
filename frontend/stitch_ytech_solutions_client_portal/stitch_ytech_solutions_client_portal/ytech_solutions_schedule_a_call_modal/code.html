@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container": "#eceef0",
+                "primary-container": "#1e293b",
+                "on-secondary": "#ffffff",
+                "on-primary": "#ffffff",
+                "on-error": "#ffffff",
+                "primary-fixed-dim": "#bcc7de",
+                "surface-bright": "#f7f9fb",
+                "error": "#ba1a1a",
+                "tertiary-fixed-dim": "#b7c8e1",
+                "on-primary-fixed-variant": "#3c475a",
+                "tertiary-fixed": "#d3e4fe",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-fixed": "#002113",
+                "surface-container-high": "#e6e8ea",
+                "inverse-surface": "#2d3133",
+                "on-primary-fixed": "#111c2d",
+                "secondary-fixed": "#6ffbbe",
+                "on-tertiary": "#ffffff",
+                "on-error-container": "#93000a",
+                "primary": "#091426",
+                "on-tertiary-fixed": "#0b1c30",
+                "tertiary-container": "#1a2a3e",
+                "surface-container-highest": "#e0e3e5",
+                "primary-fixed": "#d8e3fb",
+                "on-tertiary-fixed-variant": "#38485d",
+                "background": "#f7f9fb",
+                "surface-dim": "#d8dadc",
+                "on-surface": "#191c1e",
+                "on-secondary-container": "#00714d",
+                "secondary-fixed-dim": "#4edea3",
+                "inverse-on-surface": "#eff1f3",
+                "inverse-primary": "#bcc7de",
+                "surface": "#f7f9fb",
+                "on-surface-variant": "#45474c",
+                "error-container": "#ffdad6",
+                "surface-tint": "#545f73",
+                "outline": "#75777d",
+                "on-secondary-fixed-variant": "#005236",
+                "surface-container-low": "#f2f4f6",
+                "secondary-container": "#6cf8bb",
+                "on-primary-container": "#8590a6",
+                "on-background": "#191c1e",
+                "tertiary": "#041528",
+                "on-tertiary-container": "#8191a9",
+                "outline-variant": "#c5c6cd",
+                "surface-variant": "#e0e3e5",
+                "secondary": "#006c49"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "container-max": "1280px",
+                "stack-md": "32px",
+                "stack-sm": "16px",
+                "margin-x": "40px",
+                "stack-lg": "64px",
+                "gutter": "32px"
+            },
+            "fontFamily": {
+                "label-sm": ["Inter"],
+                "button": ["Inter"],
+                "body-md": ["Inter"],
+                "display-lg-mobile": ["Inter"],
+                "display-lg": ["Inter"],
+                "headline-md": ["Inter"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "label-sm": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "button": ["15px", {"lineHeight": "1", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface overflow-hidden">
+<!-- Backdrop & Modal Container -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-primary/40 backdrop-blur-sm transition-opacity duration-300" id="modal-root">
+<!-- Modal Card -->
+<div class="bg-surface-container-lowest w-full max-w-4xl rounded-2xl border border-outline-variant shadow-2xl flex flex-col max-h-[795px] animate-in fade-in zoom-in duration-300">
+<!-- Header -->
+<div class="p-stack-md border-b border-outline-variant flex justify-between items-start">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-1">Schedule a Strategy Call</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Select a convenient time to sync with your dedicated manager, Sarah Jenkins.</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 -mr-2" onclick="document.getElementById('modal-root').classList.add('hidden')">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Body: Dual Column -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-stack-md grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Left Column: Calendar -->
+<div class="md:col-span-7 flex flex-col gap-stack-sm">
+<div class="flex items-center justify-between mb-2">
+<span class="font-button text-button text-primary">October 2024</span>
+<div class="flex gap-2">
+<button class="p-1 border border-outline-variant rounded hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span></button>
+<button class="p-1 border border-outline-variant rounded hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span></button>
+</div>
+</div>
+<div class="calendar-grid text-center mb-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Mo</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Tu</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">We</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Th</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Fr</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-error">Sa</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider text-error">Su</span>
+</div>
+<div class="calendar-grid">
+<!-- Simplified October Calendar for demonstration -->
+<span class="p-3 text-on-surface-variant/30 text-label-sm">30</span>
+<span class="p-3 text-primary text-label-sm">1</span>
+<span class="p-3 text-primary text-label-sm">2</span>
+<span class="p-3 text-primary text-label-sm">3</span>
+<span class="p-3 text-primary text-label-sm">4</span>
+<span class="p-3 text-primary text-label-sm">5</span>
+<span class="p-3 text-primary text-label-sm">6</span>
+<span class="p-3 text-primary text-label-sm">7</span>
+<span class="p-3 text-primary text-label-sm">8</span>
+<span class="p-3 text-primary text-label-sm">9</span>
+<!-- Available Day -->
+<button class="w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-secondary-container text-on-secondary-container font-bold text-label-sm hover:ring-2 ring-secondary transition-all">10</button>
+<span class="p-3 text-primary text-label-sm">11</span>
+<span class="p-3 text-primary text-label-sm">12</span>
+<span class="p-3 text-primary text-label-sm">13</span>
+<span class="p-3 text-primary text-label-sm">14</span>
+<!-- Available Day -->
+<button class="w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-secondary-container text-on-secondary-container font-bold text-label-sm hover:ring-2 ring-secondary transition-all">15</button>
+<span class="p-3 text-primary text-label-sm">16</span>
+<span class="p-3 text-primary text-label-sm">17</span>
+<span class="p-3 text-primary text-label-sm">18</span>
+<span class="p-3 text-primary text-label-sm">19</span>
+<span class="p-3 text-primary text-label-sm">20</span>
+<span class="p-3 text-primary text-label-sm">21</span>
+<!-- Selected Day -->
+<button class="w-10 h-10 mx-auto flex items-center justify-center rounded-full bg-secondary text-on-secondary font-bold text-label-sm shadow-md">22</button>
+<span class="p-3 text-primary text-label-sm">23</span>
+<span class="p-3 text-primary text-label-sm">24</span>
+<span class="p-3 text-primary text-label-sm">25</span>
+<span class="p-3 text-primary text-label-sm">26</span>
+<span class="p-3 text-primary text-label-sm">27</span>
+<span class="p-3 text-primary text-label-sm">28</span>
+<span class="p-3 text-primary text-label-sm">29</span>
+<span class="p-3 text-primary text-label-sm">30</span>
+<span class="p-3 text-primary text-label-sm">31</span>
+</div>
+<div class="mt-4 p-4 rounded-xl bg-surface-container-low border border-outline-variant flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container-high border-2 border-on-secondary">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a female business executive named Sarah Jenkins. She has a confident and friendly expression, wearing a tailored navy blue blazer. The background is a blurred high-end corporate office with soft, natural morning light filtering through large windows, maintaining a clean and minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_Sa8yclQbPzGoBY4m7IxOf8G3kgZ-1CvLrFnhgBFpPS-UklfIYAVbEh01d3EQmmpnkByfVvbsL9XYExZRt3fV0mBpbw3YoAFyTGwDqJJsPUBY_B-lu7QmeQMjJtsw5-P76holhr6895OMrgR2a1_0CrNc5U4EZlsKC1FUzt87_W5gyrnSOhscoJHxtBShXDUjUZElQk01Hrn9KCAgmA6nFy2ppKAl8_jXl0cPtQz-3XbmqVHa7EQpjt50fDoNypV6T7HVdrthPGE"/>
+</div>
+<div>
+<p class="font-button text-button text-primary">Sarah Jenkins</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Strategic Account Manager</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Time Slots -->
+<div class="md:col-span-5 flex flex-col gap-stack-sm">
+<span class="font-button text-button text-primary mb-2">Available Timeslots</span>
+<div class="flex flex-col gap-3">
+<button class="w-full p-4 text-left border border-outline-variant rounded-lg font-body-md text-primary hover:border-secondary transition-all">
+                            10:00 AM
+                        </button>
+<button class="w-full p-4 text-left border border-outline-variant rounded-lg font-body-md text-primary hover:border-secondary transition-all">
+                            11:30 AM
+                        </button>
+<!-- Selected Slot -->
+<button class="w-full p-4 text-left border-2 border-secondary bg-secondary-container/10 rounded-lg font-button text-primary shadow-sm flex justify-between items-center group">
+<span>2:00 PM</span>
+<span class="material-symbols-outlined text-secondary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<button class="w-full p-4 text-left border border-outline-variant rounded-lg font-body-md text-primary hover:border-secondary transition-all">
+                            4:15 PM
+                        </button>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2 px-1">
+                        All times are shown in your local timezone (EST).
+                    </p>
+</div>
+</div>
+<!-- Footer -->
+<div class="p-stack-md border-t border-outline-variant bg-surface-container-lowest">
+<button class="w-full bg-secondary text-on-secondary py-4 px-8 rounded-lg font-button text-button hover:bg-on-secondary-container transition-all active:scale-[0.99] shadow-sm">
+                    Confirm and Book Call
+                </button>
+<p class="mt-4 text-center font-label-sm text-label-sm text-on-surface-variant">
+                    A calendar invitation will be sent to your primary email address.
+                </p>
+</div>
+</div>
+</div>
+<!-- Main Dashboard Underlay (Simulated) -->
+<div class="max-w-container-max mx-auto px-margin-x py-stack-lg blur-[2px] opacity-50 pointer-events-none">
+<header class="flex justify-between items-center mb-stack-lg">
+<h1 class="font-display-lg text-display-lg text-primary">Workspace Dashboard</h1>
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant"></div>
+</header>
+<div class="grid grid-cols-12 gap-gutter">
+<div class="col-span-8 h-64 bg-white rounded-2xl border border-outline-variant"></div>
+<div class="col-span-4 h-64 bg-white rounded-2xl border border-outline-variant"></div>
+<div class="col-span-12 h-96 bg-white rounded-2xl border border-outline-variant"></div>
+</div>
+</div>
+<script>
+        // Simple Micro-interactions
+        const timeButtons = document.querySelectorAll('.md\\:col-span-5 button');
+        timeButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                timeButtons.forEach(b => {
+                    b.classList.remove('border-2', 'border-secondary', 'bg-secondary-container/10', 'font-button');
+                    b.classList.add('border', 'border-outline-variant', 'font-body-md');
+                    const icon = b.querySelector('.material-symbols-outlined');
+                    if(icon) icon.remove();
+                });
+                this.classList.remove('border', 'border-outline-variant', 'font-body-md');
+                this.classList.add('border-2', 'border-secondary', 'bg-secondary-container/10', 'font-button');
+                this.insertAdjacentHTML('beforeend', '<span class="material-symbols-outlined text-secondary" data-icon="check_circle" style="font-variation-settings: \'FILL\' 1;">check_circle</span>');
+            });
+        });
+    </script>
+</body></html>

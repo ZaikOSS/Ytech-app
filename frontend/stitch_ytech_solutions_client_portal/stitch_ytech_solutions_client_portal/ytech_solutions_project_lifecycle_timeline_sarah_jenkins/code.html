@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Lifecycle &amp; Milestones | Ytech Solutions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#eceef0",
+                    "on-surface": "#191c1e",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "primary": "#091426",
+                    "outline": "#75777d",
+                    "on-tertiary-container": "#8191a9",
+                    "tertiary-fixed": "#d3e4fe",
+                    "on-secondary-fixed": "#002113",
+                    "surface-container-low": "#f2f4f6",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "primary-fixed": "#d8e3fb",
+                    "secondary-container": "#6cf8bb",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-secondary-fixed-variant": "#005236",
+                    "secondary-fixed-dim": "#4edea3",
+                    "tertiary-container": "#1a2a3e",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface": "#f7f9fb",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#1e293b",
+                    "primary-fixed-dim": "#bcc7de",
+                    "tertiary": "#041528",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "on-primary-container": "#8590a6",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#545f73",
+                    "inverse-primary": "#bcc7de",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "on-secondary-container": "#00714d",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#111c2d",
+                    "on-background": "#191c1e",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f7f9fb",
+                    "surface-dim": "#d8dadc",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c5c6cd",
+                    "secondary": "#10B981", // Emerald Green Override for Brand
+                    "surface-variant": "#e0e3e5",
+                    "on-surface-variant": "#45474c",
+                    "background": "#f7f9fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "gutter": "32px",
+                    "stack-sm": "16px",
+                    "margin-x": "40px",
+                    "stack-md": "32px",
+                    "stack-lg": "64px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "button": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "button": ["15px", {"lineHeight": "1", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-nav-bg { background-color: #6cf8bb; color: #00714d; }
+        .gantt-row { display: grid; grid-template-columns: repeat(92, 1fr); gap: 0; } /* 92 days for May, June, July */
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: 1px solid #E2E8F0; box-shadow: 0 4px 20px rgba(30, 41, 59, 0.03); }
+        .today-line { position: absolute; top: 0; bottom: 0; width: 2px; background: #10B981; z-index: 10; }
+        .timeline-marker { border-left: 1px solid #F1F5F9; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-primary min-h-screen flex">
+<!-- NavigationDrawer (Sidebar) -->
+<aside class="h-full w-80 fixed left-0 top-0 bg-surface dark:bg-surface-dim border-r border-outline-variant flex flex-col py-8 px-6 gap-stack-sm z-50">
+<div class="mb-8 flex flex-col items-start">
+<h1 class="font-headline-md text-headline-md text-primary font-bold tracking-tight">Ytech</h1>
+<span class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest mt-1">Project Fulfilment</span>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Client Selection</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-xl font-bold translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">cycle</span>
+<span class="font-body-md text-body-md">Project Lifecycle</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">person_pin</span>
+<span class="font-body-md text-body-md">Resource Allocation</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+</nav>
+<div class="mt-auto pt-8 border-t border-outline-variant">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary-fixed">
+<img alt="Sarah Jenkins Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of Sarah Jenkins, a Lead Project Manager with a confident and warm expression. She has short dark hair and is wearing a stylish blazer, set against a blurred, high-end minimalist corporate background with soft lighting and cool grey tones that align with a premium B2B UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEzIsGwN0S9SfsmrTAT7yso5IxGle11PIIeXTZoLZxtJptd2tKpsSIna6wgrIRBvjgZkmrbhkBDjRqXtHJVBHP1Vvp5f4T9aQCRQX9Vb76fvBg_CwrwHxO7zxhsKX5mAOajIhhb4_x4ZRWhGdudZpZ5ZjkpCXA3k286tnC068rrKci11_WOxgMqInUDxswjqhn0FgEuWuB8w1HtL6dp2HwOkw_5GRXmwcoXEkjMoPaVLijYXnDdzX-9jn8o0_H4Tn6xK2lC3bxWBk"/>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-surface">Ytech Admin</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Lead Project Manager</span>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 bg-secondary rounded-full"></span>
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Active</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-80 flex-1 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky z-40 bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center justify-between px-margin-x py-4 max-w-container-max mx-auto">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Manager Workspace › Project Fulfillment</h2>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<section class="p-margin-x max-w-container-max mx-auto w-full flex flex-col gap-stack-lg">
+<!-- MASTER LIFECYCLE ROADMAP -->
+<div class="glass-card rounded-2xl p-8">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary-container">Active Project Schedules &amp; Deadlines</h3>
+<p class="text-on-surface-variant font-body-md">Quarterly Roadmap: May — July 2026</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1.5 text-label-sm font-label-sm px-3 py-1 bg-surface-container rounded-full">
+<span class="w-2 h-2 bg-secondary rounded-full"></span>
+                            Active
+                        </span>
+</div>
+</div>
+<!-- Gantt Chart View -->
+<div class="relative overflow-x-auto pb-4">
+<!-- Timeline Header -->
+<div class="grid grid-cols-3 border-b border-outline-variant mb-6 text-center">
+<div class="py-2 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">May</div>
+<div class="py-2 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant bg-surface-container-low/50">June</div>
+<div class="py-2 font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">July</div>
+</div>
+<!-- Gantt Body -->
+<div class="space-y-12 relative min-w-[900px]">
+<!-- Vertical "Today" Line (Calculated for June 11th) -->
+<!-- 31 days in May + 11 days in June = 42nd day out of 92 -->
+<div class="today-line" style="left: calc((42 / 92) * 100%);">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded">TODAY: JUNE 11</div>
+</div>
+<!-- Row 1: Sterling Media -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-body-md font-semibold text-primary">Sterling Media (E-Commerce Pack)</span>
+<span class="text-label-sm text-secondary font-bold">Design Phase</span>
+</div>
+<div class="h-6 w-full bg-surface-container rounded-full overflow-hidden relative">
+<!-- Spanning June 11 to July 11 (30 days) -->
+<!-- Start: Day 42, End: Day 72 -->
+<div class="absolute top-0 bottom-0 bg-secondary shadow-sm rounded-full" style="left: calc((42 / 92) * 100%); width: calc((30 / 92) * 100%);">
+<div class="h-full w-1/2 bg-white/20 animate-pulse"></div>
+</div>
+</div>
+</div>
+<!-- Row 2: Rodriguez Labs -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-body-md font-semibold text-primary">Rodriguez Labs (Corporate Branding)</span>
+<span class="text-label-sm text-primary-container font-bold">Development Phase</span>
+</div>
+<div class="h-6 w-full bg-surface-container rounded-full overflow-hidden relative">
+<!-- Spanning May 24 to June 24 (31 days) -->
+<!-- Start: Day 24, End: Day 55 -->
+<div class="absolute top-0 bottom-0 bg-primary-container shadow-sm rounded-full" style="left: calc((24 / 92) * 100%); width: calc((31 / 92) * 100%);">
+<div class="h-full w-2/3 bg-white/10"></div>
+</div>
+</div>
+</div>
+<!-- Legend Grid (Subtle lines) -->
+<div class="absolute inset-0 grid grid-cols-6 pointer-events-none opacity-20">
+<div class="timeline-marker"></div>
+<div class="timeline-marker"></div>
+<div class="timeline-marker"></div>
+<div class="timeline-marker"></div>
+<div class="timeline-marker"></div>
+<div class="timeline-marker"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- AUDITING & ISO 27001 COMPLIANCE LOG -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-8 glass-card rounded-2xl p-8">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<h3 class="font-headline-md text-headline-md text-primary-container">Hardening &amp; Security Verification Checklist</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Left Column Checklist -->
+<div class="space-y-6">
+<div class="flex items-start gap-4 p-4 rounded-xl border border-secondary/20 bg-secondary/5 transition-all hover:shadow-md">
+<div class="mt-1 w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">SSL/TLS Configuration Verified</p>
+<p class="text-label-sm text-on-surface-variant">Global certificate pinning active across all subdomains.</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-xl border border-secondary/20 bg-secondary/5 transition-all hover:shadow-md">
+<div class="mt-1 w-6 h-6 rounded-full bg-secondary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">Database Isolation Checked</p>
+<p class="text-label-sm text-on-surface-variant">VPC peering routes validated for production clusters.</p>
+</div>
+</div>
+</div>
+<!-- Right Column Checklist -->
+<div class="space-y-6">
+<div class="flex items-start gap-4 p-4 rounded-xl border border-outline-variant bg-surface-container-low transition-all">
+<div class="mt-1 w-6 h-6 rounded-full border-2 border-outline flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-outline">schedule</span>
+</div>
+<div>
+<p class="font-body-md font-bold text-outline">Vulnerability Scan Scheduled</p>
+<p class="text-label-sm text-on-surface-variant">Pending automated penetration test execution (June 15).</p>
+</div>
+</div>
+<!-- Progress Summary -->
+<div class="p-6 bg-primary-container rounded-2xl text-white">
+<div class="flex justify-between items-end mb-4">
+<span class="font-label-sm text-label-sm uppercase tracking-widest opacity-70">ISO 27001 Compliance</span>
+<span class="font-display-lg text-headline-md">67%</span>
+</div>
+<div class="w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[67%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Compliance Meta Panel -->
+<div class="md:col-span-4 flex flex-col gap-stack-sm">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-6 flex-1">
+<h4 class="font-body-md font-bold text-primary mb-4">Audit Intelligence</h4>
+<div class="space-y-4">
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-label-sm text-on-surface-variant">Last Full Scan</span>
+<span class="text-label-sm font-bold">May 30, 2026</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-label-sm text-on-surface-variant">Risk Level</span>
+<span class="px-2 py-0.5 rounded text-[10px] bg-secondary-fixed text-on-secondary-fixed font-black uppercase">Low</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-surface-container">
+<span class="text-label-sm text-on-surface-variant">Assigned Auditor</span>
+<span class="text-label-sm font-bold">Sarah Jenkins</span>
+</div>
+</div>
+<button class="w-full mt-6 py-3 bg-secondary text-white font-button text-button rounded-xl hover:shadow-lg transition-all active:scale-95">
+                            Initiate New Audit
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full bottom-0 mt-auto bg-surface-container-low border-t border-outline-variant">
+<div class="flex justify-between items-center px-margin-x py-stack-sm max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<span class="font-label-sm text-label-sm font-black text-primary">Ytech Solutions</span>
+<span class="text-outline font-label-sm text-label-sm">© 2024 Ytech Solutions. All rights reserved.</span>
+</div>
+<nav class="flex gap-6">
+<a class="text-outline hover:text-on-secondary-container underline font-label-sm text-label-sm transition-all" href="#">Activity Feed</a>
+<a class="text-outline hover:text-on-secondary-container underline font-label-sm text-label-sm transition-all" href="#">Call Scheduler</a>
+<a class="text-outline hover:text-on-secondary-container underline font-label-sm text-label-sm transition-all" href="#">Support</a>
+</nav>
+</div>
+</footer>
+</main>
+<script>
+        // Simple interaction for the sidebar items
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if(!link.classList.contains('bg-secondary-container')) {
+                    // Logic for navigation would go here
+                }
+            });
+        });
+    </script>
+</body></html>

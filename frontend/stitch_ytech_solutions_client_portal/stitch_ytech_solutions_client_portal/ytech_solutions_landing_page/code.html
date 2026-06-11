@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ytech Solutions - Next-Generation Web Experiences</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#c5c6cd",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-secondary-container": "#00714d",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary-container": "#1a2a3e",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-primary-container": "#8590a6",
+                        "primary-container": "#1e293b",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary-fixed": "#d3e4fe",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#f7f9fb",
+                        "on-primary-fixed-variant": "#3c475a",
+                        "primary-fixed-dim": "#bcc7de",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#041528",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-dim": "#d8dadc",
+                        "surface-container": "#eceef0",
+                        "outline": "#75777d",
+                        "surface-variant": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "surface-tint": "#545f73",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#d8e3fb",
+                        "on-primary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "inverse-primary": "#bcc7de",
+                        "secondary-container": "#6cf8bb",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#111c2d",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#8191a9",
+                        "on-surface-variant": "#45474c",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#006c49",
+                        "primary": "#091426",
+                        "surface": "#f7f9fb",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "inverse-surface": "#2d3133"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1rem"
+                    },
+                    "spacing": {
+                        "gutter": "32px",
+                        "margin-x": "40px",
+                        "stack-md": "32px",
+                        "stack-sm": "16px",
+                        "stack-lg": "64px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "button": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400" }],
+                        "button": ["15px", { "lineHeight": "1", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Ambient shadow for cards */
+        .ambient-shadow { box-shadow: 0 4px 20px rgba(30, 41, 59, 0.05); }
+        .ambient-shadow-hover:hover { box-shadow: 0 8px 30px rgba(30, 41, 59, 0.08); transition: box-shadow 0.3s ease; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/20 shadow-sm dark:shadow-none">
+<div class="max-w-container-max mx-auto px-margin-x flex justify-between items-center h-20">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">signal_cellular_alt</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Ytech Solutions</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-primary-container hover:text-secondary transition-colors duration-200" href="#services">Our Services</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-primary-container hover:text-secondary transition-colors duration-200" href="#pricing">Pricing Packs</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant dark:text-on-primary-container hover:text-secondary transition-colors duration-200" href="#contact">Contact Us</a>
+</nav>
+<button class="hidden md:block bg-[#10B981] text-white px-6 py-3 rounded-full font-button text-button hover:bg-secondary transition-colors scale-95 active:opacity-80 transition-transform">
+                Get Started
+            </button>
+<button class="md:hidden text-primary p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-stack-lg">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-margin-x py-stack-lg flex flex-col items-center text-center mt-12 mb-24">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary max-w-4xl mb-stack-md leading-tight">
+                Next-Generation Web Experiences for Growing Businesses
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-stack-lg">
+                Secure, scalable, and beautifully designed web applications engineered specifically for forward-thinking SMEs. We build the digital infrastructure your business needs to scale effortlessly.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<a class="bg-[#10B981] text-white px-8 py-4 rounded-full font-button text-button hover:bg-secondary transition-colors inline-block text-center" href="#pricing">
+                    Explore Packages
+                </a>
+<a class="border border-outline-variant text-primary px-8 py-4 rounded-full font-button text-button hover:bg-surface-container-low transition-colors inline-block text-center" href="#contact">
+                    Talk to Sales
+                </a>
+</div>
+<div class="mt-stack-lg w-full max-w-5xl rounded-2xl overflow-hidden border border-outline-variant ambient-shadow relative h-64 md:h-96">
+<img alt="Abstract digital dashboard interface showing analytics and data visualization." class="w-full h-full object-cover" data-alt="A clean, minimalist digital dashboard interface displayed on a high-resolution screen in a brightly lit modern office setting. The interface features crisp white backgrounds, subtle gray lines, and vibrant emerald green data visualizations. The aesthetic is highly professional, emphasizing clarity and modern B2B SaaS design principles without any clutter or dark themes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnTqoCD5RyvS07mZMjSbP-_8PIFFXBqMcuCi_fjk9Ge-6llywXMeS5hhhtp8S6r2Zeq3IhqjxWaG04ETyx5tqIFPPmFTnD1L5aXv69SAMrJdAWf6PW01fIpbV6MpUU57dwx7RHFJs29tytep0Ue6lOe-jQ2FFKzMVCgqrXEVw9k877tDfYlvbTd0iO003JIJI575fyd7hLMJ6rWOLpucaSpua1yiDXqoMUg3HGE_rgSfC6-kEy4lZTeohSsevhxDIfRvpoRVuPLVI"/>
+</div>
+</section>
+<!-- Pricing Grid -->
+<section class="max-w-container-max mx-auto px-margin-x py-stack-lg bg-surface-container-low rounded-[40px] mb-24" id="pricing">
+<div class="text-center mb-stack-lg">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Transparent Pricing Packs</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Tailored solutions for every stage of your digital journey.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 ambient-shadow ambient-shadow-hover flex flex-col">
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Pack Showcase / Vitrine</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 border-b border-surface-container-high pb-6">Perfect for establishing a strong, professional online presence.</p>
+<ul class="flex-grow space-y-4 mb-8">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Responsive Static Design</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">SEO Optimization Setup</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Contact Form Integration</span>
+</li>
+</ul>
+<button class="w-full border border-primary-container text-primary-container px-6 py-3 rounded-full font-button text-button hover:bg-surface-container-low transition-colors">
+                        Order Showcase
+                    </button>
+</div>
+<!-- Card 2 (Featured) -->
+<div class="bg-surface-container-lowest rounded-2xl border-2 border-[#10B981] p-8 ambient-shadow ambient-shadow-hover flex flex-col relative transform md:-translate-y-4">
+<div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#10B981] text-white px-4 py-1 rounded-full font-label-sm text-label-sm">Most Popular</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Pack E-Commerce</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 border-b border-surface-container-high pb-6">Full-featured online store to drive digital sales.</p>
+<ul class="flex-grow space-y-4 mb-8">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Complete Storefront Setup</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Payment Gateway Integration</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Inventory Management</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Advanced Analytics</span>
+</li>
+</ul>
+<button class="w-full bg-[#10B981] text-white px-6 py-3 rounded-full font-button text-button hover:bg-secondary transition-colors">
+                        Order E-Commerce
+                    </button>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 ambient-shadow ambient-shadow-hover flex flex-col">
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Pack Custom &amp; Maint.</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 border-b border-surface-container-high pb-6">Bespoke internal tools and ongoing technical support.</p>
+<ul class="flex-grow space-y-4 mb-8">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Custom Web App Development</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">API Integrations</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#10B981] text-sm mt-1">check_circle</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Monthly Security Updates</span>
+</li>
+</ul>
+<button class="w-full border border-primary-container text-primary-container px-6 py-3 rounded-full font-button text-button hover:bg-surface-container-low transition-colors">
+                        Contact for Custom
+                    </button>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="max-w-container-max mx-auto px-margin-x py-stack-lg" id="contact">
+<div class="max-w-3xl mx-auto bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 md:p-12 ambient-shadow">
+<div class="text-center mb-8">
+<h2 class="font-headline-md text-headline-md text-primary mb-2">Start Your Project</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Tell us about your needs and we'll get back to you within 24 hours.</p>
+</div>
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block font-label-sm text-label-sm text-primary mb-2" for="name">Full Name</label>
+<input class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" id="name" placeholder="Jane Doe" type="text"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-primary mb-2" for="email">Corporate Email</label>
+<input class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" id="email" placeholder="jane@company.com" type="email"/>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-primary mb-2" for="message">Message / Project Scope</label>
+<textarea class="w-full border border-outline-variant rounded-lg px-4 py-3 font-body-md text-body-md text-on-surface focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" id="message" placeholder="Describe your web project requirements..." rows="4"></textarea>
+</div>
+<button class="w-full bg-primary-container text-white px-8 py-4 rounded-full font-button text-button hover:bg-tertiary transition-colors" type="submit">
+                        Send Message
+                    </button>
+</form>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-lg border-t border-outline-variant dark:border-outline bg-surface-container-low dark:bg-tertiary-container">
+<div class="max-w-container-max mx-auto px-margin-x grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div>
+<span class="font-headline-md text-headline-md text-primary dark:text-primary-fixed mb-4 block">Ytech Solutions</span>
+<p class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant dark:text-on-tertiary-container mt-8">
+                    © 2024 Ytech Solutions. All rights reserved.
+                </p>
+</div>
+<div class="flex flex-wrap gap-x-8 gap-y-4 md:justify-end md:items-start pt-2 md:pt-0">
+<a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-container transition-all opacity-80 hover:opacity-100" href="#">Services</a>
+<a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-container transition-all opacity-80 hover:opacity-100" href="#">Pricing</a>
+<a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-container transition-all opacity-80 hover:opacity-100" href="#">Case Studies</a>
+<a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-container transition-all opacity-80 hover:opacity-100" href="#">Contact</a>
+<a class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant dark:text-on-tertiary-container hover:text-secondary dark:hover:text-secondary-container transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+</div>
+</div>
+</footer>
+</body></html>

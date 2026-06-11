@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ytech Solutions | Executive Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+            color: #1e293b;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .chart-gradient-emerald {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0) 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8e0;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e0e3e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#8590a6",
+                        "on-secondary-fixed": "#002113",
+                        "background": "#f7f9fb",
+                        "primary-container": "#1e293b",
+                        "error": "#ba1a1a",
+                        "secondary": "#006c49",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#c5c6cd",
+                        "tertiary-fixed": "#d3e4fe",
+                        "tertiary-container": "#1a2a3e",
+                        "surface-container-high": "#e6e8ea",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#6ffbbe",
+                        "secondary-container": "#6cf8bb",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "surface-tint": "#545f73",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#8191a9",
+                        "on-surface-variant": "#45474c",
+                        "tertiary": "#041528",
+                        "primary-fixed": "#d8e3fb",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "outline": "#75777d",
+                        "surface": "#f7f9fb",
+                        "inverse-primary": "#bcc7de",
+                        "primary": "#091426",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#005236",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary-container": "#00714d",
+                        "on-background": "#191c1e",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-primary-fixed-variant": "#3c475a",
+                        "primary-fixed-dim": "#bcc7de",
+                        "on-primary-fixed": "#111c2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "32px",
+                        "stack-lg": "64px",
+                        "margin-x": "40px",
+                        "stack-md": "32px",
+                        "container-max": "1280px",
+                        "stack-sm": "16px"
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-sm": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- Navigation Drawer (SideNav) -->
+<aside class="flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r border-outline-variant bg-surface overflow-y-auto">
+<div class="px-8 py-10">
+<h1 class="font-headline-md text-headline-md text-primary">Ytech Solutions</h1>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Active: Overview -->
+<div class="flex items-center px-8 py-4 text-secondary font-bold border-r-4 border-secondary bg-surface-container-low cursor-pointer active:opacity-80 transition-colors">
+<span class="material-symbols-outlined mr-4" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Overview</span>
+</div>
+<div class="flex items-center px-8 py-4 text-on-surface-variant font-body-md hover:bg-surface-container-high transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined mr-4" data-icon="group">group</span>
+<span class="font-body-md text-body-md">Client Profiles</span>
+</div>
+<div class="flex items-center px-8 py-4 text-on-surface-variant font-body-md hover:bg-surface-container-high transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined mr-4" data-icon="assignment_ind">assignment_ind</span>
+<span class="font-body-md text-body-md">Project Assignment</span>
+</div>
+<div class="flex items-center px-8 py-4 text-on-surface-variant font-body-md hover:bg-surface-container-high transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined mr-4" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">System Settings</span>
+</div>
+</nav>
+</aside>
+<!-- Main Canvas Area -->
+<main class="ml-64 min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-margin-x w-full h-16 bg-surface-bright border-b border-outline-variant sticky top-0 z-10">
+<div class="flex items-center space-x-4">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="menu">menu</span>
+<h2 class="font-headline-md text-headline-md text-primary">Admin Operations</h2>
+</div>
+<div class="flex items-center space-x-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container border border-outline-variant rounded-full text-sm focus:ring-1 focus:ring-secondary focus:border-secondary outline-none transition-all w-64" placeholder="Search systems..." type="text"/>
+</div>
+<div class="flex items-center space-x-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-highest p-2 rounded-full transition-opacity" data-icon="notifications">notifications</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant cursor-pointer">
+<img alt="Admin Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRveGVTpBSj95zFeaypXRFIRqGi-eFeo7bjPCq8AZUttgdwlsS_ulqbZEl4ZGYFxyTRMVFg8qJacvEwLZ5V1mlrqg9O-sHeY_YFnMqgi2K6_3LEgwiNyhEWz8fwlO0wlEO-t250HMUhD6VoG4emeUEmQPOk2Knqqi5YAsac_DhftcOeK9BVpWaF55CBxnP_I5vmgVOpWOvnZtC-QoDhiYOUlG3vHvrTsnjFoug5SjjmpJS6cFKmzbVQMglf36XkPA8F9C00W6fQik"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-10 max-w-container-max mx-auto w-full space-y-stack-md">
+<!-- Financial Performance Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="bg-white p-8 rounded-2xl border border-outline-variant shadow-[0_4px_20px_rgba(30,41,59,0.05)] transition-transform hover:-translate-y-1">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-sm uppercase tracking-wider text-xs">Monthly Recurring Revenue</span>
+<span class="bg-[#10B981]/10 text-secondary text-xs font-bold px-2 py-1 rounded-full">+12%</span>
+</div>
+<div class="text-display-lg font-display-lg text-primary">$8,420.00</div>
+<div class="mt-4 w-full bg-surface-container rounded-full h-1">
+<div class="bg-[#10B981] h-1 rounded-full w-[78%]"></div>
+</div>
+</div>
+<div class="bg-white p-8 rounded-2xl border border-outline-variant shadow-[0_4px_20px_rgba(30,41,59,0.05)] transition-transform hover:-translate-y-1">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-sm uppercase tracking-wider text-xs">Total Sales (YTD)</span>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="payments">payments</span>
+</div>
+<div class="text-display-lg font-display-lg text-primary">$142,500.00</div>
+<div class="mt-4 text-sm text-on-surface-variant">Ahead of budget by $12.4k</div>
+</div>
+<div class="bg-white p-8 rounded-2xl border border-outline-variant shadow-[0_4px_20px_rgba(30,41,59,0.05)] transition-transform hover:-translate-y-1">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label-sm uppercase tracking-wider text-xs">Active Subscriptions</span>
+<span class="material-symbols-outlined text-secondary" data-icon="hub">hub</span>
+</div>
+<div class="text-display-lg font-display-lg text-primary">14 Hosting</div>
+<div class="mt-2 text-on-surface-variant font-body-md text-sm">Enterprise Tiers Active</div>
+</div>
+</div>
+<!-- Analytics & Distribution Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Line Chart: Delivery Velocity -->
+<div class="lg:col-span-2 bg-white p-8 rounded-2xl border border-outline-variant">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Project Delivery Velocity</h3>
+<p class="text-on-surface-variant text-sm">Average throughput over 6-month timeline</p>
+</div>
+<div class="flex space-x-2">
+<button class="px-3 py-1 text-xs font-bold bg-surface-container text-primary rounded-lg border border-outline-variant">H1 2024</button>
+<button class="px-3 py-1 text-xs font-bold text-on-surface-variant hover:bg-surface-container transition-colors rounded-lg">All Time</button>
+</div>
+</div>
+<!-- Chart Placeholder Visual -->
+<div class="h-64 relative flex items-end space-x-4 pt-10">
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="border-t border-surface-container w-full h-0"></div>
+<div class="border-t border-surface-container w-full h-0"></div>
+<div class="border-t border-surface-container w-full h-0"></div>
+<div class="border-t border-surface-container w-full h-0"></div>
+</div>
+<!-- Simulated Data Points -->
+<div class="flex-1 group relative">
+<div class="absolute bottom-[30%] left-1/2 -translate-x-1/2 w-3 h-3 bg-[#10B981] border-2 border-white rounded-full z-10 transition-transform group-hover:scale-150"></div>
+<div class="h-[30%] chart-gradient-emerald border-t-2 border-[#10B981] rounded-t-sm"></div>
+<div class="text-center mt-2 text-[10px] text-on-surface-variant font-bold">JAN</div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-[45%] left-1/2 -translate-x-1/2 w-3 h-3 bg-[#10B981] border-2 border-white rounded-full z-10 transition-transform group-hover:scale-150"></div>
+<div class="h-[45%] chart-gradient-emerald border-t-2 border-[#10B981] rounded-t-sm"></div>
+<div class="text-center mt-2 text-[10px] text-on-surface-variant font-bold">FEB</div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-[55%] left-1/2 -translate-x-1/2 w-3 h-3 bg-[#10B981] border-2 border-white rounded-full z-10 transition-transform group-hover:scale-150"></div>
+<div class="h-[55%] chart-gradient-emerald border-t-2 border-[#10B981] rounded-t-sm"></div>
+<div class="text-center mt-2 text-[10px] text-on-surface-variant font-bold">MAR</div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-[75%] left-1/2 -translate-x-1/2 w-3 h-3 bg-[#10B981] border-2 border-white rounded-full z-10 transition-transform group-hover:scale-150"></div>
+<div class="h-[75%] chart-gradient-emerald border-t-2 border-[#10B981] rounded-t-sm"></div>
+<div class="text-center mt-2 text-[10px] text-on-surface-variant font-bold">APR</div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-[65%] left-1/2 -translate-x-1/2 w-3 h-3 bg-[#10B981] border-2 border-white rounded-full z-10 transition-transform group-hover:scale-150"></div>
+<div class="h-[65%] chart-gradient-emerald border-t-2 border-[#10B981] rounded-t-sm"></div>
+<div class="text-center mt-2 text-[10px] text-on-surface-variant font-bold">MAY</div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-[90%] left-1/2 -translate-x-1/2 w-3 h-3 bg-[#10B981] border-2 border-white rounded-full z-10 transition-transform group-hover:scale-150"></div>
+<div class="h-[90%] chart-gradient-emerald border-t-2 border-[#10B981] rounded-t-sm"></div>
+<div class="text-center mt-2 text-[10px] text-on-surface-variant font-bold">JUN</div>
+</div>
+</div>
+</div>
+<!-- Doughnut Chart: Distribution -->
+<div class="bg-white p-8 rounded-2xl border border-outline-variant">
+<h3 class="font-headline-md text-headline-md text-primary mb-6">Project Distribution</h3>
+<div class="relative h-56 flex items-center justify-center">
+<!-- Custom CSS Doughnut Simulator -->
+<div class="w-48 h-48 rounded-full border-[18px] border-surface-container relative">
+<!-- Slices Visual (Pure CSS) -->
+<div class="absolute -inset-[18px] w-48 h-48 rounded-full border-[18px] border-transparent border-t-[#10B981] border-r-[#10B981] rotate-45"></div>
+<div class="absolute -inset-[18px] w-48 h-48 rounded-full border-[18px] border-transparent border-b-primary rotate-[110deg]"></div>
+<div class="absolute -inset-[18px] w-48 h-48 rounded-full border-[18px] border-transparent border-l-secondary rotate-[190deg]"></div>
+</div>
+<div class="absolute text-center">
+<div class="text-2xl font-bold text-primary">100%</div>
+<div class="text-[10px] uppercase font-bold text-on-surface-variant">Market Share</div>
+</div>
+</div>
+<ul class="mt-8 space-y-3">
+<li class="flex items-center justify-between text-sm">
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-primary mr-3"></span>
+<span class="text-on-surface-variant">E-Commerce</span>
+</div>
+<span class="font-bold text-primary">55%</span>
+</li>
+<li class="flex items-center justify-between text-sm">
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-[#10B981] mr-3"></span>
+<span class="text-on-surface-variant">Vitrine</span>
+</div>
+<span class="font-bold text-primary">30%</span>
+</li>
+<li class="flex items-center justify-between text-sm">
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-secondary mr-3"></span>
+<span class="text-on-surface-variant">Maintenance</span>
+</div>
+<span class="font-bold text-primary">15%</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- System Activity Log -->
+<div class="bg-white rounded-2xl border border-outline-variant shadow-[0_4px_20px_rgba(30,41,59,0.05)] overflow-hidden">
+<div class="px-8 py-6 border-b border-surface-container-high flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-primary">System Activity Log</h3>
+<button class="text-secondary font-bold text-sm hover:underline">Export Full Log</button>
+</div>
+<div class="divide-y divide-surface-container-high">
+<!-- Activity Item -->
+<div class="px-8 py-6 flex items-start group hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center mr-6 group-hover:bg-[#10B981]/10 transition-colors">
+<span class="material-symbols-outlined text-[#10B981]" data-icon="verified">verified</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-primary text-body-md">Payment Received</span>
+<span class="text-on-surface-variant text-xs">10:24 AM</span>
+</div>
+<p class="text-on-surface-variant text-sm">Alex Sterling completed payment for invoice <span class="font-bold text-primary">#YT-2026-8843</span> via SecurePortal.</p>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="px-8 py-6 flex items-start group hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center mr-6 group-hover:bg-primary-container/10 transition-colors">
+<span class="material-symbols-outlined text-primary" data-icon="assignment_ind">assignment_ind</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-primary text-body-md">Project Assignment</span>
+<span class="text-on-surface-variant text-xs">09:15 AM</span>
+</div>
+<p class="text-on-surface-variant text-sm">Admin assigned Manager <span class="font-bold">Sarah Jenkins</span> to lead the <span class="text-secondary">Alex Sterling</span> rebranding project.</p>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="px-8 py-6 flex items-start group hover:bg-surface-container-low transition-colors">
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center mr-6 group-hover:bg-secondary/10 transition-colors">
+<span class="material-symbols-outlined text-secondary" data-icon="person_add">person_add</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-bold text-primary text-body-md">New Registration</span>
+<span class="text-on-surface-variant text-xs">Yesterday</span>
+</div>
+<p class="text-on-surface-variant text-sm">New client registration submitted by <span class="font-bold">Julia Chen</span>. Awaiting vetting and profile approval.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Meta -->
+<footer class="pt-8 pb-12 flex justify-between items-center text-on-surface-variant border-t border-outline-variant">
+<p class="text-sm font-body-md">© 2024 Ytech Solutions Admin Console. All metrics are live.</p>
+<div class="flex items-center space-x-6 text-sm font-bold">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">System Health</a>
+</div>
+</footer>
+</div>
+</main>
+<script>
+        // Micro-interaction for cards
+        document.querySelectorAll('.bg-white').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.borderColor = '#e2e8f0';
+            });
+        });
+    </script>
+</body></html>

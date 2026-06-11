@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Client Profiles | Ytech Solutions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Custom scrollbar for a premium feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#0b1c30",
+                    "background": "#f7f9fb",
+                    "outline": "#75777d",
+                    "surface": "#f7f9fb",
+                    "on-primary-fixed": "#111c2d",
+                    "on-surface": "#191c1e",
+                    "on-background": "#191c1e",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e6e8ea",
+                    "primary": "#091426",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "surface-dim": "#d8dadc",
+                    "error-container": "#ffdad6",
+                    "secondary": "#006c49",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed": "#d8e3fb",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary-fixed-variant": "#005236",
+                    "tertiary-container": "#1a2a3e",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#bcc7de",
+                    "primary-container": "#1e293b",
+                    "surface-tint": "#545f73",
+                    "secondary-container": "#6cf8bb",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed": "#d3e4fe",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#8191a9",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-surface-variant": "#45474c",
+                    "secondary-fixed": "#6ffbbe",
+                    "error": "#ba1a1a",
+                    "surface-container": "#eceef0",
+                    "tertiary": "#041528",
+                    "on-secondary-container": "#00714d",
+                    "inverse-on-surface": "#eff1f3",
+                    "outline-variant": "#c5c6cd",
+                    "inverse-primary": "#bcc7de",
+                    "on-primary-container": "#8590a6",
+                    "surface-bright": "#f7f9fb",
+                    "surface-variant": "#e0e3e5",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary-fixed": "#002113"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-x": "40px",
+                    "stack-lg": "64px",
+                    "gutter": "32px",
+                    "stack-md": "32px",
+                    "stack-sm": "16px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "button": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "button": ["15px", {"lineHeight": "1", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "label-sm": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex min-h-screen">
+<!-- NavigationDrawer (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col p-stack-sm gap-y-2 z-50">
+<div class="px-4 py-6">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Ytech Solutions</h1>
+</div>
+<nav class="flex flex-col gap-y-1">
+<a class="flex items-center gap-x-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Active State: Client Profiles -->
+<a class="flex items-center gap-x-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold font-body-md text-body-md transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span>Client Profiles</span>
+</a>
+<a class="flex items-center gap-x-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span>Project Assignment</span>
+</a>
+<a class="flex items-center gap-x-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>System Settings</span>
+</a>
+</nav>
+<div class="mt-auto p-4 border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold">AD</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-primary">Admin User</span>
+<span class="text-xs text-on-surface-variant">admin@ytech.solutions</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopAppBar (Shared Component) -->
+<header class="w-full sticky top-0 z-40 bg-surface-container-lowest border-b border-outline-variant shadow-sm flex justify-between items-center px-gutter py-4">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-secondary cursor-pointer active:scale-95">menu</button>
+<h2 class="font-headline-md text-headline-md text-secondary">Admin Operations</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<img alt="User profile photo" class="w-10 h-10 rounded-full object-cover border-2 border-transparent group-hover:border-secondary transition-all" data-alt="A professional portrait of a senior tech executive in a high-end corporate setting. The lighting is sophisticated and directional, creating a polished, authoritative look. The background features a blurred modern office with glass partitions and soft architectural highlights. The color palette is composed of professional grays, deep blues, and crisp whites, reflecting a luxury enterprise aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDk5AraC88An-KyeLlKiDTaWvgTopwVoEad3CWlz0QL-hxRbzOvsxP36Qx9IZIsC-kby4x0utv1ApAOiyLCCQ9g3ciowTU8mgokfPAMg5mEnG0r89d1AERkw3GI2Mj0Mgwdh95khBTraEQNGbWeVlNTlsu_a6JbBNcGZY47hcrKC1_6fWR2dKEVgysJTZuHCV_-3zD1UaFGE3xyouR98nyT8p0AomfZ6APXdleSJGx16ccWOUZTfbP4FfmhNpLSeR2Fj9nLjpbdwg"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-gutter flex-1 flex flex-col gap-stack-md">
+<!-- Directory Control Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="relative flex-1 max-w-2xl">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-white border border-outline-variant rounded-xl focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none text-body-md text-primary" placeholder="Search accounts by client name, company, or email address..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-white border border-outline-variant rounded-full text-sm font-medium text-primary hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                        Status: All Active
+                    </button>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-secondary text-white rounded-full text-sm font-bold hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg">add</span>
+                        New Client
+                    </button>
+</div>
+</div>
+<!-- Dashboard Grid Area -->
+<div class="flex flex-col lg:flex-row gap-gutter">
+<!-- Master Client Directory Table -->
+<div class="flex-1 bg-white rounded-2xl border border-outline-variant shadow-[0_4px_20px_rgba(30,41,59,0.05)] overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-lowest">
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Company</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Contact</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Email</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Join Date</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-wider text-center">Projects</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-wider text-right">Billings</th>
+<th class="px-6 py-4 text-label-sm font-bold text-on-surface-variant uppercase tracking-wider text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="px-6 py-5">
+<span class="font-semibold text-primary block">Sterling Media</span>
+<span class="text-xs text-on-surface-variant">Media &amp; Broadcast</span>
+</td>
+<td class="px-6 py-5 text-body-md text-primary">Alex Sterling</td>
+<td class="px-6 py-5 text-body-md text-on-surface-variant">alex@sterling.com</td>
+<td class="px-6 py-5 text-body-md text-on-surface-variant">June 11, 2026</td>
+<td class="px-6 py-5 text-center">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container text-primary font-bold text-xs">1</span>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-primary">$12,450.00</td>
+<td class="px-6 py-5 text-center">
+<span class="px-3 py-1 bg-secondary/10 text-secondary text-xs font-bold rounded-full">Active</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group bg-surface-container-low/30">
+<td class="px-6 py-5">
+<span class="font-semibold text-primary block">Rodriguez Labs</span>
+<span class="text-xs text-on-surface-variant">Bio-Technology</span>
+</td>
+<td class="px-6 py-5 text-body-md text-primary">Elena Rodriguez</td>
+<td class="px-6 py-5 text-body-md text-on-surface-variant">elena@rodriguez.io</td>
+<td class="px-6 py-5 text-body-md text-on-surface-variant">May 04, 2026</td>
+<td class="px-6 py-5 text-center">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container text-primary font-bold text-xs">2</span>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-primary">$18,200.00</td>
+<td class="px-6 py-5 text-center">
+<span class="px-3 py-1 bg-secondary/10 text-secondary text-xs font-bold rounded-full">Active</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="px-6 py-5">
+<span class="font-semibold text-primary block">Thorne Digital</span>
+<span class="text-xs text-on-surface-variant">Digital Marketing</span>
+</td>
+<td class="px-6 py-5 text-body-md text-primary">Marcus Thorne</td>
+<td class="px-6 py-5 text-body-md text-on-surface-variant">marcus@thorne.net</td>
+<td class="px-6 py-5 text-body-md text-on-surface-variant">Feb 18, 2026</td>
+<td class="px-6 py-5 text-center">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container text-primary font-bold text-xs">0</span>
+</td>
+<td class="px-6 py-5 text-right font-semibold text-primary">$3,500.00</td>
+<td class="px-6 py-5 text-center">
+<span class="px-3 py-1 bg-error/10 text-error text-xs font-bold rounded-full">Suspended</span>
+</td>
+</tr>
+<!-- More placeholders for visual balance -->
+<tr class="hover:bg-surface-container-low transition-colors cursor-pointer group">
+<td class="px-6 py-5"><span class="font-semibold text-primary block">Atlas Global</span><span class="text-xs text-on-surface-variant">Logistics</span></td>
+<td class="px-6 py-5 text-body-md">Sarah Chen</td>
+<td class="px-6 py-5 text-on-surface-variant">s.chen@atlas.com</td>
+<td class="px-6 py-5 text-on-surface-variant">Jan 12, 2026</td>
+<td class="px-6 py-5 text-center"><span class="w-8 h-8 flex items-center justify-center rounded-full bg-surface-container text-xs">4</span></td>
+<td class="px-6 py-5 text-right font-semibold text-primary">$45,000.00</td>
+<td class="px-6 py-5 text-center"><span class="px-3 py-1 bg-secondary/10 text-secondary text-xs font-bold rounded-full">Active</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-surface-container-lowest border-t border-outline-variant flex items-center justify-between">
+<span class="text-sm text-on-surface-variant">Showing 4 of 24 active accounts</span>
+<div class="flex gap-2">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Detailed Profile Preview Drawer (Simulated inline for context) -->
+<div class="w-full lg:w-96 bg-white rounded-2xl border border-outline-variant shadow-[0_4px_20px_rgba(30,41,59,0.05)] flex flex-col animate-fade-in">
+<div class="p-8 border-b border-outline-variant">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-primary text-lg">Client Details</h3>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full bg-surface-container-low flex items-center justify-center mb-4 border border-outline-variant overflow-hidden">
+<img alt="Alex Sterling Profile" class="w-full h-full object-cover" data-alt="A close-up professional profile picture of a young male entrepreneur with a clean-cut appearance. He is wearing a tailored navy blue blazer over a white shirt. The lighting is crisp and bright, characteristic of a high-end studio portrait. The overall aesthetic is professional, minimalist, and aligned with a premium business software environment, featuring cool tones and high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-SpiVJt5KkH9RraX-zGDfBKaoIPBv0hAsZSNP_19mEkZBUltQNEdGXCLlHVrZg5U7ql4eGxpVXjmPwvD9Fvi0xShvt7UFND8pskwf83sSKySt_qHIuRfoTuCutm43-C0eixcsYgY7xbUPauDMUuPdNmPbfO_UnRGUatbI314n4CSSt70csZ0QAZvp9eOnYq0k5jhq0CyeQ_PeuGM6Zd3jTxP1jSMYYI7MRbuixYzBJrH4AZrooy9SZyqVdpkTgWQiCoWoIGQvwXE"/>
+</div>
+<h4 class="font-headline-md text-headline-md text-primary">Alex Sterling</h4>
+<p class="text-secondary font-semibold text-sm">Sterling Media</p>
+<div class="mt-4 flex flex-col gap-1">
+<p class="text-on-surface-variant text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-base">mail</span> alex@sterling.com
+                                </p>
+<p class="text-on-surface-variant text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-base">calendar_today</span> Joined June 11, 2026
+                                </p>
+</div>
+</div>
+</div>
+<div class="p-8 flex-1">
+<div class="flex items-center justify-between mb-4">
+<h5 class="text-label-sm font-bold text-on-surface-variant uppercase tracking-wider">Billing History</h5>
+<button class="text-secondary text-xs font-bold hover:underline">View All</button>
+</div>
+<div class="bg-surface-container-low rounded-xl p-1">
+<table class="w-full text-left">
+<tbody class="divide-y divide-white/50">
+<tr class="group hover:bg-white transition-colors">
+<td class="py-3 px-3">
+<div class="flex flex-col">
+<span class="text-xs font-bold text-primary">#YT-2026-8843</span>
+<span class="text-[10px] text-on-surface-variant">Oct 12, 2026</span>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="text-sm font-semibold text-primary">$12,450.00</span>
+</td>
+<td class="py-3 px-3 text-right">
+<span class="inline-block px-2 py-0.5 bg-secondary text-[10px] font-bold text-white rounded">PAID</span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-secondary text-lg">download</button>
+</td>
+</tr>
+<tr class="group hover:bg-white transition-colors">
+<td class="py-3 px-3">
+<div class="flex flex-col">
+<span class="text-xs font-bold text-primary">#YT-2026-8120</span>
+<span class="text-[10px] text-on-surface-variant">Sept 10, 2026</span>
+</div>
+</td>
+<td class="py-3 px-3">
+<span class="text-sm font-semibold text-primary">$8,200.00</span>
+</td>
+<td class="py-3 px-3 text-right">
+<span class="inline-block px-2 py-0.5 bg-secondary text-[10px] font-bold text-white rounded">PAID</span>
+</td>
+<td class="py-3 px-3 text-right">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-secondary text-lg">download</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant">
+<h5 class="text-label-sm font-bold text-on-surface-variant uppercase tracking-wider mb-4">Quick Actions</h5>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-outline-variant hover:border-secondary hover:bg-secondary/5 transition-all group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary mb-1">chat</span>
+<span class="text-[11px] font-bold text-primary">Message</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-outline-variant hover:border-secondary hover:bg-secondary/5 transition-all group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary mb-1">edit</span>
+<span class="text-[11px] font-bold text-primary">Edit Profile</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-outline-variant hover:border-secondary hover:bg-secondary/5 transition-all group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary mb-1">assignment</span>
+<span class="text-[11px] font-bold text-primary">Add Project</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-xl border border-outline-variant hover:border-error hover:bg-error/5 transition-all group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-error mb-1">block</span>
+<span class="text-[11px] font-bold text-primary">Suspend</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Info -->
+<footer class="px-gutter py-8 mt-auto flex justify-between items-center text-on-surface-variant/60 text-xs">
+<p>© 2026 Ytech Solutions Operations. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-secondary" href="#">Security Policy</a>
+<a class="hover:text-secondary" href="#">System Logs</a>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interaction for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                // Remove active class from others
+                document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('bg-surface-container-high/50'));
+                // Add active class
+                row.classList.add('bg-surface-container-high/50');
+            });
+        });
+
+        // Simple Fade-In effect on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const main = document.querySelector('main');
+            main.style.opacity = '0';
+            main.style.transition = 'opacity 0.6s ease-out';
+            setTimeout(() => {
+                main.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body></html>

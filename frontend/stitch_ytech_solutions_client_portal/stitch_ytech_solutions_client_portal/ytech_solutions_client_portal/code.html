@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ytech Solutions Mobile App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#bcc7de",
+                    "surface-bright": "#f7f9fb",
+                    "primary-fixed": "#d8e3fb",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-background": "#191c1e",
+                    "on-tertiary-container": "#8191a9",
+                    "secondary-container": "#6cf8bb",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed-variant": "#3c475a",
+                    "on-secondary-fixed": "#002113",
+                    "surface-container": "#eceef0",
+                    "tertiary": "#041528",
+                    "background": "#f7f9fb",
+                    "on-primary-fixed": "#111c2d",
+                    "primary": "#091426",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "surface-dim": "#d8dadc",
+                    "tertiary-container": "#1a2a3e",
+                    "surface-container-highest": "#e0e3e5",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-high": "#e6e8ea",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "inverse-primary": "#bcc7de",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-surface": "#191c1e",
+                    "on-primary-container": "#8590a6",
+                    "surface-variant": "#e0e3e5",
+                    "on-surface-variant": "#45474c",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#545f73",
+                    "tertiary-fixed": "#d3e4fe",
+                    "surface-container-low": "#f2f4f6",
+                    "on-secondary-fixed-variant": "#005236",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "primary-container": "#1e293b",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c5c6cd",
+                    "outline": "#75777d",
+                    "secondary": "#006c49",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#f7f9fb",
+                    "on-secondary-container": "#00714d",
+                    "on-tertiary-fixed-variant": "#38485d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "32px",
+                    "stack-sm": "16px",
+                    "stack-md": "32px",
+                    "margin-x": "40px",
+                    "stack-lg": "64px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "button": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "label-sm": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "button": ["15px", {"lineHeight": "1", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopAppBar from JSON -->
+<header class="w-full top-0 sticky bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm z-50">
+<div class="flex items-center justify-between px-margin-x h-20 max-w-container-max mx-auto">
+<div class="flex items-center gap-4 cursor-pointer active:opacity-80 transition-all">
+<span class="material-symbols-outlined text-secondary dark:text-secondary-fixed">grid_view</span>
+<span class="font-headline-md text-headline-md font-bold text-tertiary dark:text-primary-fixed-dim tracking-tight">Ytech Solutions</span>
+</div>
+<div class="cursor-pointer active:opacity-80 transition-all">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-margin-x py-stack-md flex flex-col md:flex-row gap-stack-md">
+<!-- Navigation Drawer (Hidden on mobile, flex on md+) -->
+<aside class="hidden md:flex flex-col py-stack-md px-4 gap-2 bg-surface-container-lowest dark:bg-inverse-surface border-r border-outline-variant dark:border-outline h-full w-72 shrink-0">
+<div class="mb-stack-md px-4">
+<h2 class="font-body-md text-body-md font-bold text-tertiary dark:text-primary-fixed-dim">Ytech Platform</h2>
+</div>
+<nav class="flex flex-col gap-2">
+<button class="nav-item group flex items-center gap-stack-sm p-4 cursor-pointer bg-secondary-container text-on-secondary-container rounded-lg font-button w-full text-left transition-all" id="nav-auth" onclick="switchTab('tab-auth')">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span>Authentication</span>
+</button>
+<button class="nav-item group flex items-center gap-stack-sm p-4 cursor-pointer text-on-surface-variant hover:bg-surface-container-low rounded-lg font-button w-full text-left transition-all" id="nav-checkout" onclick="switchTab('tab-checkout')">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span>Custom Checkout</span>
+</button>
+<button class="nav-item group flex items-center gap-stack-sm p-4 cursor-pointer text-on-surface-variant hover:bg-surface-container-low rounded-lg font-button w-full text-left transition-all" id="nav-workspace" onclick="switchTab('tab-workspace')">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Client Workspace</span>
+</button>
+</nav>
+</aside>
+<!-- Mobile Navigation Tabs (Hidden on md+, visible on mobile) -->
+<div class="md:hidden flex w-full border-b border-outline-variant mb-stack-md overflow-x-auto">
+<button class="mobile-nav-item flex-1 py-4 px-2 text-center text-secondary border-b-2 border-secondary font-button whitespace-nowrap" id="mobile-nav-auth" onclick="switchTab('tab-auth')">
+                 Authentication
+             </button>
+<button class="mobile-nav-item flex-1 py-4 px-2 text-center text-on-surface-variant font-button whitespace-nowrap hover:text-secondary transition-colors duration-200" id="mobile-nav-checkout" onclick="switchTab('tab-checkout')">
+                 Custom Checkout
+             </button>
+<button class="mobile-nav-item flex-1 py-4 px-2 text-center text-on-surface-variant font-button whitespace-nowrap hover:text-secondary transition-colors duration-200" id="mobile-nav-workspace" onclick="switchTab('tab-workspace')">
+                 Client Workspace
+             </button>
+</div>
+<!-- Content Area -->
+<div class="flex-grow w-full">
+<!-- TAB 1: AUTHENTICATION -->
+<section class="tab-content active w-full max-w-md mx-auto" id="tab-auth">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 shadow-sm">
+<div class="text-center mb-stack-md">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary-container mb-4">Join the Elite</h1>
+<p class="font-body-md text-body-md text-primary-container/80">Access high-tier enterprise tools designed for stakeholders who value efficiency.</p>
+</div>
+<form class="flex flex-col gap-4" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Corporate Email</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-colors font-body-md text-body-md" placeholder="executive@company.com" type="email"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Password</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-colors font-body-md text-body-md" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Full Name</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-colors font-body-md text-body-md" placeholder="Jane Doe" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Company Name</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-colors font-body-md text-body-md" placeholder="Acme Corp" type="text"/>
+</div>
+<button class="mt-4 w-full bg-[#10B981] text-white py-4 rounded-lg font-button text-button hover:bg-[#0EA5E9] transition-colors shadow-[0_4px_20px_rgba(30,41,59,0.05)]" type="button">
+                            Create Enterprise Account
+                        </button>
+</form>
+</div>
+</section>
+<!-- TAB 2: CUSTOM CHECKOUT -->
+<section class="tab-content w-full max-w-lg mx-auto" id="tab-checkout">
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 shadow-sm flex flex-col gap-stack-md">
+<div class="flex items-center justify-between border-b border-outline-variant pb-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary-container">E-Commerce Web Pack</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Premium Enterprise Tier</p>
+</div>
+<div class="bg-[#10B981]/10 text-[#10B981] px-3 py-1 rounded-full font-label-sm text-label-sm flex items-center gap-1 border border-[#10B981]/20">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+                            Secured
+                        </div>
+</div>
+<div class="flex justify-between items-end font-display-lg-mobile text-display-lg-mobile text-primary-container">
+<span>Total Due</span>
+<span>$12,500.00</span>
+</div>
+<form class="flex flex-col gap-4 mt-4" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Cardholder Name</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-colors font-body-md text-body-md" placeholder="JANE DOE" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Raw Payment String</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-colors font-body-md text-body-md font-mono text-sm" placeholder="PAN|MM|YYYY|CVV (Example: 1442216444355245|02|2031|795)" type="text"/>
+<p class="font-label-sm text-label-sm text-on-surface-variant/70 mt-1">Direct system injection format for B2B processing.</p>
+</div>
+<button class="mt-4 w-full bg-[#1E293B] border border-[#1E293B] text-white py-4 rounded-lg font-button text-button hover:bg-transparent hover:text-[#1E293B] transition-colors shadow-[0_4px_20px_rgba(30,41,59,0.05)]" type="button">
+                            Process Transaction
+                        </button>
+</form>
+</div>
+</section>
+<!-- TAB 3: CLIENT WORKSPACE -->
+<section class="tab-content w-full" id="tab-workspace">
+<div class="flex flex-col gap-stack-md">
+<!-- Executive Invoice Card -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<h3 class="font-headline-md text-headline-md text-primary-container">Invoice #YT-9942</h3>
+<div class="bg-[#10B981]/10 text-[#10B981] px-3 py-1 rounded-full font-label-sm text-label-sm border border-[#10B981]/20 font-bold tracking-wider">
+                                    PAID
+                                </div>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant grid grid-cols-2 gap-x-8 gap-y-2 mt-2">
+<span class="text-label-sm uppercase text-outline">Cardholder:</span>
+<span>Jane Doe</span>
+<span class="text-label-sm uppercase text-outline">Timestamp:</span>
+<span>2024-05-20 14:32 UTC</span>
+</div>
+</div>
+<div class="font-display-lg-mobile text-display-lg-mobile text-primary-container">
+                            $12,500.00
+                        </div>
+</div>
+<!-- Horizontal Stepper Card -->
+<div class="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 shadow-sm overflow-x-auto">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-8">Project Status</h4>
+<div class="flex items-center min-w-[800px]">
+<!-- Step 1: Payment Confirmed -->
+<div class="flex-1 relative">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center text-white z-10 border-2 border-white relative">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="h-1 bg-[#10B981] flex-1"></div>
+</div>
+<div class="absolute mt-3 -ml-4 w-32">
+<p class="font-label-sm text-label-sm text-primary-container font-semibold">Payment Confirmed</p>
+</div>
+</div>
+<!-- Step 2: Requirements Gathering -->
+<div class="flex-1 relative">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center text-white z-10 border-2 border-white relative">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="h-1 bg-[#E2E8F0] flex-1 relative overflow-hidden">
+<div class="absolute inset-0 bg-[#10B981] w-full"></div>
+</div>
+</div>
+<div class="absolute mt-3 -ml-6 w-36">
+<p class="font-label-sm text-label-sm text-primary-container font-semibold">Requirements Gathering</p>
+</div>
+</div>
+<!-- Step 3: Design Phase (Active) -->
+<div class="flex-1 relative">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest border-2 border-[#10B981] flex items-center justify-center z-10 relative">
+<div class="w-3 h-3 bg-[#10B981] rounded-full animate-pulse"></div>
+<div class="absolute inset-0 rounded-full border-2 border-[#10B981] animate-ping opacity-20"></div>
+</div>
+<div class="h-1 bg-[#E2E8F0] flex-1"></div>
+</div>
+<div class="absolute mt-3 -ml-2 w-32">
+<p class="font-label-sm text-label-sm text-primary-container font-semibold">Design Phase</p>
+<p class="font-label-sm text-[12px] text-on-surface-variant mt-1">In Progress</p>
+</div>
+</div>
+<!-- Step 4: Development -->
+<div class="flex-1 relative">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest border-2 border-[#E2E8F0] flex items-center justify-center z-10 relative">
+<span class="font-label-sm text-outline">4</span>
+</div>
+<div class="h-1 bg-[#E2E8F0] flex-1"></div>
+</div>
+<div class="absolute mt-3 -ml-2 w-32">
+<p class="font-label-sm text-label-sm text-outline">Development</p>
+</div>
+</div>
+<!-- Step 5: Deployment -->
+<div class="relative">
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest border-2 border-[#E2E8F0] flex items-center justify-center z-10 relative">
+<span class="font-label-sm text-outline">5</span>
+</div>
+</div>
+<div class="absolute mt-3 -ml-2 w-32">
+<p class="font-label-sm text-label-sm text-outline">Deployment</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer from JSON -->
+<footer class="w-full py-stack-md mt-auto bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-x max-w-container-max mx-auto gap-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant">© 2024 Ytech Solutions. All rights reserved.</span>
+<div class="flex gap-4 font-label-sm text-label-sm">
+<a class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors cursor-pointer" href="#">Help Center</a>
+</div>
+</div>
+</footer>
+<script>
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+
+            // Update desktop nav state
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.className = "nav-item group flex items-center gap-stack-sm p-4 cursor-pointer text-on-surface-variant hover:bg-surface-container-low rounded-lg font-button w-full text-left transition-all";
+                let icon = nav.querySelector('.material-symbols-outlined');
+                if(icon) icon.style.fontVariationSettings = "'FILL' 0";
+            });
+            
+            let activeNav = document.getElementById('nav-' + tabId.replace('tab-', ''));
+            if(activeNav) {
+                activeNav.className = "nav-item group flex items-center gap-stack-sm p-4 cursor-pointer bg-secondary-container text-on-secondary-container rounded-lg font-button w-full text-left transition-all";
+                let activeIcon = activeNav.querySelector('.material-symbols-outlined');
+                if(activeIcon) activeIcon.style.fontVariationSettings = "'FILL' 1";
+            }
+
+            // Update mobile nav state
+            document.querySelectorAll('.mobile-nav-item').forEach(nav => {
+                nav.className = "mobile-nav-item flex-1 py-4 px-2 text-center text-on-surface-variant font-button whitespace-nowrap hover:text-secondary transition-colors duration-200";
+            });
+            let activeMobileNav = document.getElementById('mobile-nav-' + tabId.replace('tab-', ''));
+            if(activeMobileNav) {
+                activeMobileNav.className = "mobile-nav-item flex-1 py-4 px-2 text-center text-secondary border-b-2 border-secondary font-button whitespace-nowrap";
+            }
+        }
+    </script>
+</body></html>

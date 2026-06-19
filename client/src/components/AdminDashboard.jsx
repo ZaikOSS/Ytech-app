@@ -172,6 +172,12 @@ const AdminDashboard = () => {
                         >
                             Manager Accounts
                         </button>
+                        <button 
+                            onClick={() => setCurrentView('inquiries')}
+                            className={`font-bold pb-2 transition-colors border-b-2 ${currentView === 'inquiries' ? 'border-[#10B981] text-[#10B981]' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
+                        >
+                            Incoming Inquiries
+                        </button>
                     </nav>
                     <div className="w-8 h-8 rounded-full bg-blue-800 text-white flex items-center justify-center font-bold">
                         A
@@ -184,7 +190,7 @@ const AdminDashboard = () => {
             </header>
 
             <main className="flex-1 p-10 max-w-[1280px] mx-auto w-full space-y-10">
-                {currentView === 'overview' ? (
+                {currentView === 'overview' && (
                 <>
                 {/* HEADER SUMMARY METRICS */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -312,9 +318,12 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 </section>
+                </>
+                )}
 
-                {/* INQUIRIES SECTION */}
+                {currentView === 'inquiries' && (
                 <section className="space-y-8">
+                    {/* INQUIRIES SECTION */}
                     <h2 className="text-2xl font-bold text-[#091426]">Incoming Contact Inquiries</h2>
                     <div className="bg-white rounded-2xl border border-[#c5c6cd] overflow-hidden shadow-sm">
                         <table className="w-full text-left border-collapse">
@@ -366,8 +375,9 @@ const AdminDashboard = () => {
                         </table>
                     </div>
                 </section>
-                </>
-                ) : (
+                )}
+
+                {currentView === 'managers' && (
                 <section className="space-y-8">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-[#091426]">Manager Accounts</h2>

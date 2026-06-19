@@ -4,10 +4,15 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+require('dotenv').config();
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const app = express();
 const port = process.env.PORT || 3001;
-const JWT_SECRET = 'supersecret_ytech_key';
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecret_ytech_key';
 
 // Multer config
 const storage = multer.diskStorage({
@@ -25,6 +30,70 @@ const upload = multer({
 
 // Middleware
 app.use(cors());
+
+// --- STRIPE WEBHOOK ---
+// Must be defined BEFORE express.json() so we get the raw body!
+app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || ''; // We will get this from Stripe CLI
+
+    let event;
+    try {
+        if (endpointSecret) {
+            event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+        } else {
+            // Fallback for local testing if secret not set properly, though verification is recommended
+            event = JSON.parse(req.body);
+        }
+    } catch (err) {
+        console.error('Webhook Error:', err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        
+        // Use client_reference_id as the user ID
+        const userId = session.client_reference_id;
+        const amount = session.amount_total / 100; // Stripe amounts are in cents
+        const email = session.customer_details?.email || 'stripe-customer@example.com';
+        const name = session.customer_details?.name || 'Stripe Customer';
+        
+        if (userId) {
+            try {
+                // 1. Create project
+                const [projResult] = await pool.query(
+                    'INSERT INTO Projects (client_id, status, current_phase) VALUES (?, ?, ?)',
+                    [userId, 'PAID', 1]
+                );
+                const projectId = projResult.insertId;
+
+                // 2. Generate Invoice
+                const invoiceNumber = `#YT-STRIPE-${Math.floor(1000 + Math.random() * 9000)}`;
+                const [invResult] = await pool.query(
+                    'INSERT INTO Invoices (project_id, invoice_number, amount, status) VALUES (?, ?, ?, ?)',
+                    [projectId, invoiceNumber, amount, 'PAID']
+                );
+                const invoiceId = invResult.insertId;
+
+                // 3. Record Transaction
+                await pool.query(
+                    'INSERT INTO Transactions (invoice_id, cardholder_name, card_details_string, zipcode, company_name, email, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    [invoiceId, name, 'Stripe Checkout', 'N/A', 'N/A', email, 'SUCCESS']
+                );
+                
+                console.log(`Successfully processed Stripe payment for User ID ${userId}`);
+            } catch (dbErr) {
+                console.error('Database error fulfilling Stripe order:', dbErr);
+            }
+        } else {
+            console.warn('Received Stripe session without client_reference_id');
+        }
+    }
+
+    res.json({received: true});
+});
+
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -107,18 +176,30 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// 2. Custom String Checkout Validation
+// 2. Custom Validation & Local Checkout
 app.post('/api/checkout', authenticateToken, async (req, res) => {
-    const { cardholderName, cardDetailsString, zipcode, companyName, email, amount } = req.body;
+    const { cardholderName, cardNumber, expires, cvv, zipcode, companyName, email, amount } = req.body;
     
-    // Explicit Validation Rules
-    const isValid = 
-        cardDetailsString === "card number: 1442216444355245 expiration date 02|2231 sercet code795" &&
-        cardholderName === "zaikos" &&
-        zipcode === "30000";
+    // Basic Luhn Algorithm Implementation
+    const isLuhnValid = (num) => {
+        let arr = (num + '')
+          .split('')
+          .reverse()
+          .map(x => parseInt(x));
+        let lastDigit = arr.splice(0, 1)[0];
+        let sum = arr.reduce((acc, val, i) => (i % 2 !== 0 ? acc + val : acc + ((val * 2) % 9) || 9), 0);
+        sum += lastDigit;
+        return sum % 10 === 0;
+    };
 
-    if (!isValid) {
-        return res.status(400).json({ error: 'Payment validation failed. Invalid details.' });
+    const cleanCardNum = cardNumber ? cardNumber.replace(/\D/g, '') : '';
+    
+    if (!cleanCardNum || cleanCardNum.length < 13 || !isLuhnValid(cleanCardNum)) {
+        return res.status(400).json({ error: 'Payment validation failed. Invalid card number.' });
+    }
+
+    if (!expires || !cvv || !cardholderName || !zipcode) {
+        return res.status(400).json({ error: 'Please fill in all required payment details.' });
     }
 
     try {
@@ -138,10 +219,14 @@ app.post('/api/checkout', authenticateToken, async (req, res) => {
         );
         const invoiceId = invResult.insertId;
 
+        // Safe Storage: Only keep last 4 digits
+        const last4 = cleanCardNum.slice(-4);
+        const safeCardString = `**** **** **** ${last4} | Exp: ${expires}`;
+
         // Record Transaction
         await pool.query(
             'INSERT INTO Transactions (invoice_id, cardholder_name, card_details_string, zipcode, company_name, email, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [invoiceId, cardholderName, cardDetailsString, zipcode, companyName, email, 'SUCCESS']
+            [invoiceId, cardholderName, safeCardString, zipcode, companyName, email, 'SUCCESS']
         );
 
         res.json({ message: 'Payment successful', invoice: invoiceNumber, projectId });
@@ -156,7 +241,7 @@ app.get('/api/admin/projects', authenticateToken, async (req, res) => {
     if (req.user.role !== 'ADMIN') return res.sendStatus(403);
     try {
         const [rows] = await pool.query(`
-            SELECT p.id, p.status, p.current_phase, p.created_at, u.full_name as client_name, m.full_name as manager_name
+            SELECT p.id, p.status, p.current_phase, p.created_at, p.project_data, u.full_name as client_name, m.full_name as manager_name
             FROM Projects p
             JOIN Users u ON p.client_id = u.id
             LEFT JOIN Users m ON p.manager_id = m.id
@@ -186,7 +271,7 @@ app.get('/api/manager/projects', authenticateToken, async (req, res) => {
     if (req.user.role !== 'MANAGER') return res.sendStatus(403);
     try {
         const [rows] = await pool.query(`
-            SELECT p.id, p.status, p.current_phase, p.created_at, u.full_name as client_name 
+            SELECT p.id, p.status, p.current_phase, p.created_at, p.project_data, u.full_name as client_name 
             FROM Projects p
             JOIN Users u ON p.client_id = u.id
             WHERE p.manager_id = ?
@@ -200,11 +285,71 @@ app.get('/api/manager/projects', authenticateToken, async (req, res) => {
 
 // 6. Manager: Update milestone
 app.post('/api/manager/update-phase', authenticateToken, async (req, res) => {
-    if (req.user.role !== 'MANAGER') return res.sendStatus(403);
+    if (req.user.role !== 'MANAGER' && req.user.role !== 'ADMIN') return res.sendStatus(403);
     const { projectId, newPhase } = req.body;
     try {
-        await pool.query('UPDATE Projects SET current_phase = ? WHERE id = ? AND manager_id = ?', [newPhase, projectId, req.user.id]);
+        const query = req.user.role === 'ADMIN' 
+            ? 'UPDATE Projects SET current_phase = ? WHERE id = ?' 
+            : 'UPDATE Projects SET current_phase = ? WHERE id = ? AND manager_id = ?';
+        const params = req.user.role === 'ADMIN' ? [newPhase, projectId] : [newPhase, projectId, req.user.id];
+        await pool.query(query, params);
         res.json({ message: 'Phase updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// 6b. Manager: Update project data
+app.post('/api/manager/update-project-data', authenticateToken, async (req, res) => {
+    if (req.user.role !== 'MANAGER' && req.user.role !== 'ADMIN') return res.sendStatus(403);
+    const { projectId, projectData } = req.body;
+    try {
+        const [rows] = await pool.query('SELECT project_data FROM Projects WHERE id = ?', [projectId]);
+        if (rows.length === 0) return res.status(404).json({ error: 'Project not found' });
+        
+        let existingData = typeof rows[0].project_data === 'string' ? JSON.parse(rows[0].project_data) : (rows[0].project_data || {});
+        
+        const newData = {
+            ...existingData,
+            designImages: projectData.designImages !== undefined ? projectData.designImages : existingData.designImages,
+            devProgress: projectData.devProgress !== undefined ? projectData.devProgress : existingData.devProgress,
+            liveUrl: projectData.liveUrl !== undefined ? projectData.liveUrl : existingData.liveUrl
+        };
+
+        const query = req.user.role === 'ADMIN' 
+            ? 'UPDATE Projects SET project_data = ? WHERE id = ?' 
+            : 'UPDATE Projects SET project_data = ? WHERE id = ? AND manager_id = ?';
+        const params = req.user.role === 'ADMIN' ? [JSON.stringify(newData), projectId] : [JSON.stringify(newData), projectId, req.user.id];
+        await pool.query(query, params);
+        res.json({ message: 'Project data updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// 6c. Client: Update project data
+app.post('/api/client/update-project-data', authenticateToken, async (req, res) => {
+    if (req.user.role !== 'CLIENT' && req.user.role !== 'ADMIN') return res.sendStatus(403);
+    const { projectId, projectData } = req.body;
+    try {
+        const [rows] = await pool.query('SELECT project_data FROM Projects WHERE id = ?', [projectId]);
+        if (rows.length === 0) return res.status(404).json({ error: 'Project not found' });
+        
+        let existingData = typeof rows[0].project_data === 'string' ? JSON.parse(rows[0].project_data) : (rows[0].project_data || {});
+        
+        const newData = {
+            ...existingData,
+            questionnaire: projectData.questionnaire !== undefined ? projectData.questionnaire : existingData.questionnaire
+        };
+
+        const query = req.user.role === 'ADMIN' 
+            ? 'UPDATE Projects SET project_data = ? WHERE id = ?' 
+            : 'UPDATE Projects SET project_data = ? WHERE id = ? AND client_id = ?';
+        const params = req.user.role === 'ADMIN' ? [JSON.stringify(newData), projectId] : [JSON.stringify(newData), projectId, req.user.id];
+        await pool.query(query, params);
+        res.json({ message: 'Project data updated successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
@@ -444,6 +589,47 @@ app.put('/api/admin/inquiries/:id/read', authenticateToken, async (req, res) => 
     }
 });
 
+// 14. Public: AI Chatbot
+app.post('/api/ai/chat', async (req, res) => {
+    try {
+        const { message, history } = req.body;
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+        
+        const systemPrompt = `You are the official AI Assistant for YTech Solutions, a premium web development agency. 
+Your goal is to answer visitor questions, be polite, professional, and guide them to purchase a package.
+YTech Solutions offers two main packages:
+1. Standard Package ($500): 3-page static website, basic SEO, contact form, 1-month support.
+2. Premium Package ($1500): 5-page dynamic website, CMS integration, advanced SEO, e-commerce ready, 3-months support.
+Our process has 5 phases: Payment -> Requirements -> Design -> Development -> Go-Live.
+Please keep your answers concise (1-3 sentences max). Use a friendly, professional tone.`;
+
+        let formattedHistory = [];
+        if (history && history.length > 0) {
+            formattedHistory = history.map(msg => ({
+                role: msg.role === 'user' ? 'user' : 'model',
+                parts: [{ text: msg.text }]
+            }));
+            
+            // Gemini requires the history array to start with a 'user' message
+            if (formattedHistory.length > 0 && formattedHistory[0].role === 'model') {
+                formattedHistory.shift();
+            }
+        }
+
+        const chat = model.startChat({
+            history: formattedHistory,
+            systemInstruction: { parts: [{ text: systemPrompt }] }
+        });
+
+        const result = await chat.sendMessage(message);
+        const response = result.response.text();
+        
+        res.json({ text: response });
+    } catch (err) {
+        console.error("Gemini API Error:", err);
+        res.status(500).json({ error: 'Failed to generate response' });
+    }
+});
 app.listen(port, () => {
   console.log(`Backend server running on port ${port}`);
 });

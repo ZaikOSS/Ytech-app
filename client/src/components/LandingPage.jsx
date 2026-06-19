@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import CheckoutModal from './CheckoutModal';
+import ChatBot from './ChatBot';
 
 const LandingPage = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
@@ -484,6 +485,8 @@ const LandingPage = () => {
               }}
           />
       )}
+
+      <ChatBot />
     </div>
   );
 };

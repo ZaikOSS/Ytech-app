@@ -8,7 +8,7 @@ A comprehensive full-stack web application designed to manage client projects, f
 - **Client Dashboard:** Track the real-time lifecycle of your premium web packages.
 - **Project Chat:** Communicate directly with your dedicated manager securely.
 - **File Attachments:** Attach images and PDF documents directly in the chat.
-- **Invoicing:** View digital receipts and transaction history.
+- **Invoicing:** View digital receipts and transaction history via Stripe.
 
 ### 💼 For Managers
 - **Manager Workspace:** View assigned projects and update project lifecycle phases.
@@ -20,6 +20,10 @@ A comprehensive full-stack web application designed to manage client projects, f
 - **Manager Accounts:** Full CRUD interface to add, edit, and safely delete manager accounts.
 - **Contact Inquiries:** Read, review, and manage public contact form submissions.
 
+### 🤖 AI Integration & Payments
+- **Gemini AI Sales Bot:** A public-facing AI Assistant built with `@google/generative-ai` to answer visitor questions on the landing page about pricing and services.
+- **Stripe Payments:** Integrated secure checkout flow with Stripe Webhooks to automatically advance projects to the "Requirements Gathering" phase upon successful payment.
+
 ## 🛠️ Technology Stack
 
 - **Frontend:** React, Tailwind CSS, Vite
@@ -27,12 +31,32 @@ A comprehensive full-stack web application designed to manage client projects, f
 - **Database:** MySQL
 - **Authentication:** JSON Web Tokens (JWT)
 - **File Uploads:** Multer
+- **AI Engine:** Google Gemini (`gemini-flash-latest`)
+- **Payments:** Stripe API
+
+## 🔒 Security Warning (API Keys)
+
+> **CRITICAL:** Do NOT push your API keys to GitHub! 
+
+The root directory contains a `.gitignore` file that is configured to block `.env` files. 
+You must create a `backend/.env` file locally with the following secrets:
+
+```env
+PORT=3001
+JWT_SECRET=super_secret_jwt_key
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+GEMINI_API_KEY=AIzaSy...
+```
+**Never commit this file!**
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) (v16+)
-- [MySQL](https://www.mysql.com/)
+- [Docker & Docker Compose](https://www.docker.com/) (For the database)
+- [Stripe CLI](https://stripe.com/docs/stripe-cli) (For local webhook testing)
 
 ### 1. Clone the repository
 ```bash
@@ -40,10 +64,16 @@ git clone https://github.com/ZaikOSS/Ytech-app.git
 cd Ytech-app
 ```
 
-### 2. Database Setup
-1. Create a MySQL database named `YT_solutions`.
-2. Run the SQL script located in `backend/db/init.sql` to generate the schema.
-3. Default credentials expected by the backend are `root` for username and `rootpassword` for the password. Update the `mysql.createPool` block in `backend/server.js` if yours differ.
+### 2. Database Setup (Docker)
+We use Docker to instantly spin up the MySQL database and PHPMyAdmin.
+
+```bash
+# Start the database and PHPMyAdmin in the background
+docker-compose up -d
+```
+*   The database runs on port `3306`.
+*   PHPMyAdmin runs on port `8080`.
+*   The database schema is automatically seeded from `backend/db/init.sql` on the first run.
 
 ### 3. Backend Setup
 ```bash
@@ -53,19 +83,24 @@ npm install
 # Start the backend server (runs on port 3001)
 node server.js
 ```
-*Note: Make sure to run `node migrate_messages_attachment.js` if you need to apply the latest database schema updates for file attachments.*
 
-### 4. Frontend Setup
+### 4. Stripe Webhooks Setup
+To test Stripe payments locally, you must forward webhooks to your local backend using the Stripe CLI. Open a new terminal window:
+```bash
+stripe listen --forward-to localhost:3001/api/stripe/webhook
+```
+*Copy the Webhook Signing Secret (`whsec_...`) printed in your terminal and put it in your `backend/.env` file!*
+
+### 5. Frontend Setup
+Open a new terminal window:
 ```bash
 cd client
 npm install
 
-# Start the Vite development server (runs on port 5173)
+# Start the Vite development server
 npm run dev
 ```
-
-## 🔒 Default Accounts
-Upon registering a new client account, you can access the portal. To test different roles, manually update a user's role in the `Users` table to `ADMIN` or `MANAGER`.
+The frontend will run on port `5173` (or `5174`).
 
 ## 📁 Project Structure
 
@@ -80,6 +115,7 @@ YTECH SOLUTIONS/
 │   │   ├── components/       # Dashboards, Modals, Chat, and Landing Pages
 │   │   ├── context/          # JWT Auth Context
 │   │   └── App.jsx           # Routing and Protected Routes
+├── docker-compose.yml        # MySQL + PHPMyAdmin Docker config
 └── README.md
 ```
 

@@ -248,28 +248,30 @@ const ClientDashboard = () => {
                     </div>
                     <span className="font-['Outfit'] text-2xl font-black text-gray-900 tracking-tight">YTECH<span className="text-[#10B981]">.</span></span>
                 </div>
-                <nav className="flex flex-col gap-2">
-                    <div className="px-4 py-2 mt-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Your Projects</div>
-                    {projectsData.map((p, index) => (
-                        <a 
-                            key={p.project.id}
-                            onClick={() => { setActiveProjectId(p.project.id); setCurrentView('projects'); }}
-                            className={`flex items-center gap-4 p-4 rounded-lg font-semibold cursor-pointer transition-colors ${activeProjectId === p.project.id && currentView === 'projects' ? 'bg-[#6cf8bb] text-[#00714d]' : 'text-[#45474c] hover:bg-[#f2f4f6]'}`}
-                        >
-                            <span className="material-symbols-outlined">folder_open</span>
-                            <span>Project #{index + 1}</span>
-                        </a>
-                    ))}
+                <nav className="flex flex-col gap-2 flex-1 overflow-hidden">
+                    <div className="flex-1 overflow-y-auto flex flex-col gap-2 pr-2 pb-4">
+                        <div className="px-4 py-2 mt-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Your Projects</div>
+                        {projectsData.map((p, index) => (
+                            <a 
+                                key={p.project.id}
+                                onClick={() => { setActiveProjectId(p.project.id); setCurrentView('projects'); }}
+                                className={`flex items-center gap-4 p-4 rounded-lg font-semibold cursor-pointer transition-colors ${activeProjectId === p.project.id && currentView === 'projects' ? 'bg-[#6cf8bb] text-[#00714d]' : 'text-[#45474c] hover:bg-[#f2f4f6]'}`}
+                            >
+                                <span className="material-symbols-outlined">folder_open</span>
+                                <span>Project #{index + 1}</span>
+                            </a>
+                        ))}
+                    </div>
                     
-                    <div className="px-4 py-2 mt-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Account</div>
-                    <a 
-                        onClick={() => setCurrentView('billing')}
-                        className={`flex items-center gap-4 p-4 rounded-lg font-semibold cursor-pointer transition-colors ${currentView === 'billing' ? 'bg-[#6cf8bb] text-[#00714d]' : 'text-[#45474c] hover:bg-[#f2f4f6]'}`}
-                    >
-                        <span className="material-symbols-outlined">shopping_cart</span>
-                        <span>Billing & Invoices</span>
-                    </a>
-                    <div className="mt-auto pt-8 border-t border-[#c5c6cd]">
+                    <div className="shrink-0 pt-4 border-t border-[#c5c6cd] flex flex-col gap-2">
+                        <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Account</div>
+                        <a 
+                            onClick={() => setCurrentView('billing')}
+                            className={`flex items-center gap-4 p-4 rounded-lg font-semibold cursor-pointer transition-colors ${currentView === 'billing' ? 'bg-[#6cf8bb] text-[#00714d]' : 'text-[#45474c] hover:bg-[#f2f4f6]'}`}
+                        >
+                            <span className="material-symbols-outlined">shopping_cart</span>
+                            <span>Billing & Invoices</span>
+                        </a>
                         <a onClick={logout} className="flex items-center gap-4 p-4 text-[#45474c] hover:bg-[#f2f4f6] rounded-lg font-semibold cursor-pointer">
                             <span className="material-symbols-outlined">logout</span>
                             <span>Sign Out</span>

@@ -3,6 +3,8 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import CheckoutModal from './CheckoutModal';
 import ChatBot from './ChatBot';
+import { motion } from 'framer-motion';
+import Background3D from './Background3D';
 
 const LandingPage = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
@@ -117,9 +119,10 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="bg-surface text-on-surface antialiased overflow-x-hidden min-h-screen">
+    <div className="bg-transparent relative text-on-surface antialiased overflow-x-hidden min-h-screen z-0">
+      <Background3D />
       {/* TopAppBar */}
-      <header className="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl border-b border-gray-200/50 shadow-sm transition-all duration-300">
+      <header className="absolute top-0 w-full z-50 transition-all duration-300 pt-6">
         <div className="max-w-container-max mx-auto px-margin-x flex justify-between items-center h-20">
           <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.location.href = '/'}>
             <div className="w-10 h-10 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-lg shadow-green-500/30">
@@ -139,25 +142,42 @@ const LandingPage = () => {
 
       <main className="pt-24 pb-stack-lg">
         {/* Hero Section */}
-        <section className="max-w-container-max mx-auto px-margin-x flex flex-col items-center text-center mt-8 mb-20">
-          <h1 className="font-['Outfit'] font-black text-5xl md:text-7xl text-gray-900 max-w-4xl mb-8 leading-tight tracking-tight">
+        <motion.section 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="max-w-container-max mx-auto px-margin-x flex flex-col items-center text-center mt-8 mb-20 relative z-10"
+        >
+          <h1 className="font-['Outfit'] font-black text-5xl md:text-7xl text-gray-900 max-w-4xl mb-8 leading-tight tracking-tight drop-shadow-sm">
             Next-Generation Web Experiences for Growing Businesses
           </h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-stack-lg">
+          <p className="font-body-lg text-body-lg text-gray-700 max-w-2xl mb-stack-lg drop-shadow-sm">
             Secure, scalable, and beautifully designed web applications engineered specifically for forward-thinking SMEs. We build the digital infrastructure your business needs to scale effortlessly.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <a className="bg-[#10B981] text-white px-8 py-4 rounded-full font-button text-button hover:bg-secondary transition-colors inline-block text-center" href="#pricing">
+            <motion.a 
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              className="bg-[#10B981] text-white px-8 py-4 rounded-full font-button text-button hover:bg-[#059669] transition-colors inline-block text-center shadow-lg" href="#pricing"
+            >
               Explore Packages
-            </a>
-            <a className="border border-outline-variant text-primary px-8 py-4 rounded-full font-button text-button hover:bg-surface-container-low transition-colors inline-block text-center" href="#contact">
+            </motion.a>
+            <motion.a 
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              className="bg-white/80 backdrop-blur-md border border-[#c5c6cd] text-[#091426] px-8 py-4 rounded-full font-button text-button hover:bg-white transition-colors inline-block text-center shadow-md" href="#contact"
+            >
               Talk to Sales
-            </a>
+            </motion.a>
           </div>
-        </section>
+        </motion.section>
 
         {/* Pricing Grid */}
-        <section className="max-w-container-max mx-auto px-margin-x py-stack-lg bg-surface-container-low rounded-[40px] mb-24" id="pricing">
+        <motion.section 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="max-w-container-max mx-auto px-margin-x py-stack-lg bg-white/80 backdrop-blur-xl rounded-[40px] mb-24 border border-white shadow-xl relative z-10" id="pricing"
+        >
           <div className="text-center mb-stack-lg">
             <h2 className="font-headline-md text-headline-md text-primary mb-4">Transparent Pricing Packs</h2>
             <p className="font-body-md text-body-md text-on-surface-variant">Tailored solutions for every stage of your digital journey.</p>
@@ -239,11 +259,17 @@ const LandingPage = () => {
             </div>
 
           </div>
-        </section>
+        </motion.section>
 
         {/* Contact Section */}
-        <section className="max-w-container-max mx-auto px-margin-x py-stack-lg" id="contact">
-          <div className="max-w-3xl mx-auto bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 md:p-12 ambient-shadow">
+        <motion.section 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="max-w-container-max mx-auto px-margin-x py-stack-lg relative z-10" id="contact"
+        >
+          <div className="max-w-3xl mx-auto bg-white/80 backdrop-blur-xl rounded-2xl border border-white p-8 md:p-12 shadow-xl">
             <div className="text-center mb-8">
               <h2 className="font-headline-md text-headline-md text-primary mb-2">Start Your Project</h2>
               <p className="font-body-md text-body-md text-on-surface-variant">Tell us about your needs and we'll get back to you within 24 hours.</p>
@@ -276,7 +302,7 @@ const LandingPage = () => {
               </button>
             </form>
           </div>
-        </section>
+        </motion.section>
       </main>
 
       {/* Footer */}

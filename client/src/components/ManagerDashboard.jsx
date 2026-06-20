@@ -37,7 +37,7 @@ const ManagerDashboard = () => {
     const handleSaveProjectData = async () => {
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/manager/update-project-data', {
+            const res = await fetch('/api/manager/update-project-data', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const ManagerDashboard = () => {
     const fetchProjects = async () => {
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/manager/projects', {
+            const res = await fetch('/api/manager/projects', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -94,7 +94,7 @@ const ManagerDashboard = () => {
         
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/manager/update-phase', {
+            const res = await fetch('/api/manager/update-phase', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ const ManagerDashboard = () => {
         if (!selectedProject || selectedProject.current_phase <= 1) return;
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/manager/update-phase', {
+            const res = await fetch('/api/manager/update-phase', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',

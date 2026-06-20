@@ -24,5 +24,37 @@ services:
     depends_on:
       - db
 
+  backend:
+    build: ./backend
+    restart: always
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=db
+    volumes:
+      - ./backend/uploads:/app/uploads
+    depends_on:
+      - db
+
+  frontend:
+    build: ./client
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    restart: always
+    env_file:
+      - ./backend/.env
+    entrypoint: ["sh", "-c"]
+    command: ["stripe listen --forward-to http://backend:3001/api/webhook --api-key $$STRIPE_SECRET_KEY"]
+    depends_on:
+      - backend
+
 volumes:
   db_data:

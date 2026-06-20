@@ -13,7 +13,7 @@ const ChatComponent = ({ projectId, currentUserId, isLocked = false }) => {
     const fetchMessages = async () => {
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch(`http://localhost:3001/api/messages/${projectId}`, {
+            const res = await fetch(`/api/messages/${projectId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -78,7 +78,7 @@ const ChatComponent = ({ projectId, currentUserId, isLocked = false }) => {
             if (newMessage.trim()) formData.append('messageText', newMessage);
             if (attachment) formData.append('attachment', attachment);
 
-            const res = await fetch('http://localhost:3001/api/messages', {
+            const res = await fetch('/api/messages', {
                 method: 'POST',
                 headers: { 
                     'Authorization': `Bearer ${token}`
@@ -132,11 +132,11 @@ const ChatComponent = ({ projectId, currentUserId, isLocked = false }) => {
                                     {msg.file_url && (
                                         <div className="mb-2">
                                             {msg.file_url.match(/\.(jpeg|jpg|gif|png)$/i) ? (
-                                                <a href={`http://localhost:3001${msg.file_url}`} target="_blank" rel="noopener noreferrer">
-                                                    <img src={`http://localhost:3001${msg.file_url}`} alt={msg.file_name} className="max-w-[200px] max-h-[200px] rounded-lg object-cover mb-1 border border-white/20" />
+                                                <a href={`${msg.file_url}`} target="_blank" rel="noopener noreferrer">
+                                                    <img src={`${msg.file_url}`} alt={msg.file_name} className="max-w-[200px] max-h-[200px] rounded-lg object-cover mb-1 border border-white/20" />
                                                 </a>
                                             ) : (
-                                                <a href={`http://localhost:3001${msg.file_url}`} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 underline text-sm ${isMe ? 'text-white hover:text-green-100' : 'text-[#10B981] hover:text-[#059669]'}`}>
+                                                <a href={`${msg.file_url}`} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-2 underline text-sm ${isMe ? 'text-white hover:text-green-100' : 'text-[#10B981] hover:text-[#059669]'}`}>
                                                     <span className="material-symbols-outlined text-sm">description</span>
                                                     {msg.file_name}
                                                 </a>

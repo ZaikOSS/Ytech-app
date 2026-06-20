@@ -50,7 +50,7 @@ const CheckoutModal = ({ packageDetails, onClose, onCheckoutSuccess }) => {
             await new Promise(resolve => setTimeout(resolve, 1500));
 
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/checkout', {
+            const res = await fetch('/api/checkout', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',

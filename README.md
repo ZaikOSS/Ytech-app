@@ -26,20 +26,19 @@ A comprehensive full-stack web application designed to manage client projects, f
 
 ## 🛠️ Technology Stack
 
-- **Frontend:** React, Tailwind CSS, Vite
-- **Backend:** Node.js, Express.js
-- **Database:** MySQL
+- **Frontend:** React, Tailwind CSS, Vite, Nginx (Dockerized)
+- **Backend:** Node.js, Express.js (Dockerized)
+- **Database:** MySQL (Dockerized)
 - **Authentication:** JSON Web Tokens (JWT)
 - **File Uploads:** Multer
 - **AI Engine:** Google Gemini (`gemini-flash-latest`)
-- **Payments:** Stripe API
+- **Payments:** Stripe API (Webhook handled by Stripe CLI Container)
 
 ## 🔒 Security Warning (API Keys)
 
 > **CRITICAL:** Do NOT push your API keys to GitHub! 
 
-The root directory contains a `.gitignore` file that is configured to block `.env` files. 
-You must create a `backend/.env` file locally with the following secrets:
+You must create a `backend/.env` file locally with the following secrets. The `.gitignore` prevents it from being pushed.
 
 ```env
 PORT=3001
@@ -48,15 +47,16 @@ STRIPE_SECRET_KEY=sk_test_...
 STRIPE_PUBLISHABLE_KEY=pk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 GEMINI_API_KEY=AIzaSy...
+DB_HOST=db
 ```
 **Never commit this file!**
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Fully Dockerized)
+
+This app is fully containerized. With one command, you can run the Frontend, Backend, Database, and Stripe Webhook listener.
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v16+)
-- [Docker & Docker Compose](https://www.docker.com/) (For the database)
-- [Stripe CLI](https://stripe.com/docs/stripe-cli) (For local webhook testing)
+- [Docker & Docker Compose](https://www.docker.com/)
 
 ### 1. Clone the repository
 ```bash
@@ -64,58 +64,38 @@ git clone https://github.com/ZaikOSS/Ytech-app.git
 cd Ytech-app
 ```
 
-### 2. Database Setup (Docker)
-We use Docker to instantly spin up the MySQL database and PHPMyAdmin.
+### 2. Setup your `.env`
+Create `backend/.env` and fill in your Stripe and Gemini keys as shown in the Security Warning above.
 
+### 3. Build & Run
+Run the entire stack in the background:
 ```bash
-# Start the database and PHPMyAdmin in the background
-docker-compose up -d
-```
-*   The database runs on port `3306`.
-*   PHPMyAdmin runs on port `8080`.
-*   The database schema is automatically seeded from `backend/db/init.sql` on the first run.
-
-### 3. Backend Setup
-```bash
-cd backend
-npm install
-
-# Start the backend server (runs on port 3001)
-node server.js
+docker-compose up -d --build
 ```
 
-### 4. Stripe Webhooks Setup
-To test Stripe payments locally, you must forward webhooks to your local backend using the Stripe CLI. Open a new terminal window:
-```bash
-stripe listen --forward-to localhost:3001/api/stripe/webhook
-```
-*Copy the Webhook Signing Secret (`whsec_...`) printed in your terminal and put it in your `backend/.env` file!*
+### 4. Access the Application
+- **Frontend App:** http://localhost (Running on standard port 80)
+- **Database Admin (phpMyAdmin):** http://localhost:8080
+- **Backend API:** internally handles requests via the Nginx proxy
+- **Stripe Webhooks:** A `stripe-cli` container automatically runs in the background and forwards webhooks to the backend securely.
 
-### 5. Frontend Setup
-Open a new terminal window:
-```bash
-cd client
-npm install
-
-# Start the Vite development server
-npm run dev
-```
-The frontend will run on port `5173` (or `5174`).
+> **Local Development Tip:** If you want to make live changes to the React code with hot-reloading, you can still run `cd client && npm run dev`. The Vite server will proxy requests to the Docker backend automatically!
 
 ## 📁 Project Structure
 
 ```
 YTECH SOLUTIONS/
-├── backend/                  # Node/Express API
+├── backend/                  # Node/Express API (Dockerfile included)
 │   ├── db/                   # Database scripts and init.sql
+│   ├── routes/               # Modular Express API Routes
 │   ├── uploads/              # Local file storage for chat attachments
-│   └── server.js             # Main server logic and routes
-├── client/                   # React Frontend
+│   └── server.js             # Main server logic
+├── client/                   # React Frontend (Dockerfile & nginx.conf included)
 │   ├── src/
 │   │   ├── components/       # Dashboards, Modals, Chat, and Landing Pages
 │   │   ├── context/          # JWT Auth Context
 │   │   └── App.jsx           # Routing and Protected Routes
-├── docker-compose.yml        # MySQL + PHPMyAdmin Docker config
+├── docker-compose.yml        # Orchestrates Frontend, Backend, DB, phpMyAdmin, and Stripe CLI
 └── README.md
 ```
 

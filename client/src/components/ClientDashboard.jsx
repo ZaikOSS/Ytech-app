@@ -15,7 +15,7 @@ const ClientDashboard = () => {
     const fetchProjects = async () => {
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/client/projects', {
+            const res = await fetch('/api/client/projects', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -68,7 +68,7 @@ const ClientDashboard = () => {
         const updatedData = { ...parsedData, questionnaire: qData };
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/client/update-project-data', {
+            const res = await fetch('/api/client/update-project-data', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',

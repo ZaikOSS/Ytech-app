@@ -135,6 +135,10 @@ app.use('/api/client', clientRoutes(pool, authenticateToken));
 app.use('/api/messages', messagesRoutes(pool, authenticateToken, upload));
 app.use('/api', publicRoutes(pool, authenticateToken, genAI));
 
-app.listen(port, () => {
-  console.log(`Backend server running on port ${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Backend server running on port ${port}`);
+  });
+}
+
+module.exports = app;

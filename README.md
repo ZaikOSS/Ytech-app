@@ -99,5 +99,24 @@ YTECH SOLUTIONS/
 └── README.md
 ```
 
+## 🧪 Testing & CI Pipeline
+
+This project includes a fully automated **Continuous Integration (CI)** pipeline built with GitHub Actions (`.github/workflows/ci.yml`).
+
+### Backend Testing
+The backend features a robust API testing suite using **Jest** and **Supertest** located in `backend/tests/api.test.js`. It mocks external dependencies (MySQL, Stripe, Gemini) ensuring tests run quickly and reliably anywhere.
+To run the tests locally:
+```bash
+cd backend
+npm test
+```
+
+### GitHub Actions Workflow
+On every push or pull request to the `main` branch, the CI pipeline will automatically:
+1. Setup Node.js.
+2. Install backend dependencies and run the API tests.
+3. Install frontend dependencies and build the React app to catch any syntax errors.
+4. Run a `docker-compose build` to verify the container infrastructure.
+
 ## 📝 License
 This project is proprietary and created for YTECH Solutions.

@@ -1,0 +1,35 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Verify Backend & Run Tests
+      working-directory: ./backend
+      run: |
+        npm ci
+        npm test
+
+    - name: Verify Frontend Build
+      working-directory: ./client
+      run: |
+        npm ci
+        npm run build
+
+    - name: Test Docker Compose Configuration
+      run: docker-compose build

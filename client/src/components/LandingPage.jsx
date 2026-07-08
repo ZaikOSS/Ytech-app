@@ -2,6 +2,9 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import CheckoutModal from './CheckoutModal';
+import ChatBot from './ChatBot';
+import { motion } from 'framer-motion';
+import Background3D from './Background3D';
 
 const LandingPage = () => {
   const { isAuthenticated, user } = useContext(AuthContext);
@@ -28,12 +31,12 @@ const LandingPage = () => {
       if (user.role === 'ADMIN') navigate('/admin');
       else if (user.role === 'MANAGER') navigate('/manager');
       else {
-          if (pkgName && pkgPrice) {
-              setSelectedPackage({ name: pkgName, price: pkgPrice });
-              setShowCheckoutModal(true);
-          } else {
-              navigate('/client');
-          }
+        if (pkgName && pkgPrice) {
+          setSelectedPackage({ name: pkgName, price: pkgPrice });
+          setShowCheckoutModal(true);
+        } else {
+          navigate('/client');
+        }
       }
     } else {
       setShowLoginModal(true);
@@ -43,51 +46,51 @@ const LandingPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-        const response = await fetch('http://localhost:3001/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            login(data.user, data.token);
-            setShowLoginModal(false);
-            if (data.user.role === 'ADMIN') navigate('/admin');
-            else if (data.user.role === 'MANAGER') navigate('/manager');
-            else navigate('/client');
-        } else {
-            alert('Login failed: ' + data.error);
-        }
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        login(data.user, data.token);
+        setShowLoginModal(false);
+        if (data.user.role === 'ADMIN') navigate('/admin');
+        else if (data.user.role === 'MANAGER') navigate('/manager');
+        else navigate('/client');
+      } else {
+        alert('Login failed: ' + data.error);
+      }
     } catch (err) {
-        console.error(err);
-        alert('An error occurred during login');
+      console.error(err);
+      alert('An error occurred during login');
     }
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-        const response = await fetch('http://localhost:3001/api/signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            // Using email as username for consistency with login
-            body: JSON.stringify({ username, password, full_name: fullName })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            login(data.user, data.token);
-            setShowLoginModal(false);
-            // We do NOT navigate away here so the user can scroll to pricing and choose a package
-        } else {
-            alert('Signup failed: ' + data.error);
-        }
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Using email as username for consistency with login
+        body: JSON.stringify({ username, password, full_name: fullName })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        login(data.user, data.token);
+        setShowLoginModal(false);
+        // We do NOT navigate away here so the user can scroll to pricing and choose a package
+      } else {
+        alert('Signup failed: ' + data.error);
+      }
     } catch (err) {
-        console.error(err);
-        alert('An error occurred during signup');
+      console.error(err);
+      alert('An error occurred during signup');
     }
   };
 
@@ -95,38 +98,39 @@ const LandingPage = () => {
     e.preventDefault();
     setContactStatus('Submitting...');
     try {
-        const response = await fetch('http://localhost:3001/api/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: contactName, email: contactEmail, message: contactMessage })
-        });
-        const data = await response.json();
-        if (response.ok) {
-            setContactStatus('Success! We will get back to you shortly.');
-            setContactName('');
-            setContactEmail('');
-            setContactMessage('');
-        } else {
-            setContactStatus(`Error: ${data.error}`);
-        }
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: contactName, email: contactEmail, message: contactMessage })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setContactStatus('Success! We will get back to you shortly.');
+        setContactName('');
+        setContactEmail('');
+        setContactMessage('');
+      } else {
+        setContactStatus(`Error: ${data.error}`);
+      }
     } catch (err) {
-        console.error(err);
-        setContactStatus('Network error occurred.');
+      console.error(err);
+      setContactStatus('Network error occurred.');
     }
   };
 
   return (
-    <div className="bg-surface text-on-surface antialiased overflow-x-hidden min-h-screen">
+    <div className="bg-transparent relative text-on-surface antialiased overflow-x-hidden min-h-screen z-0">
+      <Background3D />
       {/* TopAppBar */}
-      <header className="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl border-b border-gray-200/50 shadow-sm transition-all duration-300">
+      <header className="absolute top-0 w-full z-50 transition-all duration-300 pt-6">
         <div className="max-w-container-max mx-auto px-margin-x flex justify-between items-center h-20">
           <div className="flex items-center gap-3 group cursor-pointer" onClick={() => window.location.href = '/'}>
             <div className="w-10 h-10 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-lg shadow-green-500/30">
-                <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
+              <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
             </div>
             <span className="font-['Outfit'] text-2xl font-black text-gray-900 tracking-tight">YTECH<span className="text-[#10B981]">.</span></span>
           </div>
-          <button 
+          <button
             onClick={handleGetStarted}
             className="flex items-center gap-2 bg-gray-900 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-gray-800 transition-all hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
           >
@@ -138,31 +142,48 @@ const LandingPage = () => {
 
       <main className="pt-24 pb-stack-lg">
         {/* Hero Section */}
-        <section className="max-w-container-max mx-auto px-margin-x flex flex-col items-center text-center mt-8 mb-20">
-          <h1 className="font-['Outfit'] font-black text-5xl md:text-7xl text-gray-900 max-w-4xl mb-8 leading-tight tracking-tight">
+        <motion.section 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="max-w-container-max mx-auto px-margin-x flex flex-col items-center text-center mt-8 mb-20 relative z-10"
+        >
+          <h1 className="font-['Outfit'] font-black text-5xl md:text-7xl text-gray-900 max-w-4xl mb-8 leading-tight tracking-tight drop-shadow-sm">
             Next-Generation Web Experiences for Growing Businesses
           </h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-stack-lg">
+          <p className="font-body-lg text-body-lg text-gray-700 max-w-2xl mb-stack-lg drop-shadow-sm">
             Secure, scalable, and beautifully designed web applications engineered specifically for forward-thinking SMEs. We build the digital infrastructure your business needs to scale effortlessly.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <a className="bg-[#10B981] text-white px-8 py-4 rounded-full font-button text-button hover:bg-secondary transition-colors inline-block text-center" href="#pricing">
+            <motion.a 
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              className="bg-[#10B981] text-white px-8 py-4 rounded-full font-button text-button hover:bg-[#059669] transition-colors inline-block text-center shadow-lg" href="#pricing"
+            >
               Explore Packages
-            </a>
-            <a className="border border-outline-variant text-primary px-8 py-4 rounded-full font-button text-button hover:bg-surface-container-low transition-colors inline-block text-center" href="#contact">
+            </motion.a>
+            <motion.a 
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              className="bg-white/80 backdrop-blur-md border border-[#c5c6cd] text-[#091426] px-8 py-4 rounded-full font-button text-button hover:bg-white transition-colors inline-block text-center shadow-md" href="#contact"
+            >
               Talk to Sales
-            </a>
+            </motion.a>
           </div>
-        </section>
+        </motion.section>
 
         {/* Pricing Grid */}
-        <section className="max-w-container-max mx-auto px-margin-x py-stack-lg bg-surface-container-low rounded-[40px] mb-24" id="pricing">
+        <motion.section 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="max-w-container-max mx-auto px-margin-x py-stack-lg bg-white/80 backdrop-blur-xl rounded-[40px] mb-24 border border-white shadow-xl relative z-10" id="pricing"
+        >
           <div className="text-center mb-stack-lg">
             <h2 className="font-headline-md text-headline-md text-primary mb-4">Transparent Pricing Packs</h2>
             <p className="font-body-md text-body-md text-on-surface-variant">Tailored solutions for every stage of your digital journey.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            
+
             {/* Card 1 */}
             <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 ambient-shadow ambient-shadow-hover flex flex-col">
               <h3 className="font-headline-md text-headline-md text-primary mb-2">Pack Showcase / Vitrine</h3>
@@ -232,25 +253,31 @@ const LandingPage = () => {
                   <span className="font-body-md text-body-md text-on-surface-variant">Monthly Security Updates</span>
                 </li>
               </ul>
-              <button className="w-full border border-primary-container text-primary-container px-6 py-3 rounded-full font-button text-button hover:bg-surface-container-low transition-colors" onClick={() => document.getElementById('contact').scrollIntoView({behavior: 'smooth'})}>
+              <button className="w-full border border-primary-container text-primary-container px-6 py-3 rounded-full font-button text-button hover:bg-surface-container-low transition-colors" onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}>
                 Contact for Custom
               </button>
             </div>
 
           </div>
-        </section>
+        </motion.section>
 
         {/* Contact Section */}
-        <section className="max-w-container-max mx-auto px-margin-x py-stack-lg" id="contact">
-          <div className="max-w-3xl mx-auto bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 md:p-12 ambient-shadow">
+        <motion.section 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="max-w-container-max mx-auto px-margin-x py-stack-lg relative z-10" id="contact"
+        >
+          <div className="max-w-3xl mx-auto bg-white/80 backdrop-blur-xl rounded-2xl border border-white p-8 md:p-12 shadow-xl">
             <div className="text-center mb-8">
               <h2 className="font-headline-md text-headline-md text-primary mb-2">Start Your Project</h2>
               <p className="font-body-md text-body-md text-on-surface-variant">Tell us about your needs and we'll get back to you within 24 hours.</p>
             </div>
             {contactStatus && (
-                <div className={`mb-6 p-4 rounded-lg font-body-md text-center ${contactStatus.includes('Success') ? 'bg-green-100 text-green-800' : 'bg-blue-50 text-blue-800'}`}>
-                    {contactStatus}
-                </div>
+              <div className={`mb-6 p-4 rounded-lg font-body-md text-center ${contactStatus.includes('Success') ? 'bg-green-100 text-green-800' : 'bg-blue-50 text-blue-800'}`}>
+                {contactStatus}
+              </div>
             )}
             <form className="space-y-6" onSubmit={handleContactSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -267,7 +294,7 @@ const LandingPage = () => {
                 <label className="block font-label-sm text-label-sm text-primary mb-2" htmlFor="message">Message / Project Scope</label>
                 <textarea maxLength={1000} required value={contactMessage} onChange={(e) => setContactMessage(e.target.value)} className="w-full border border-outline-variant rounded-lg px-4 py-3 pb-8 font-body-md text-body-md text-on-surface focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" id="message" placeholder="Describe your web project requirements..." rows="4"></textarea>
                 <div className="absolute right-3 bottom-3 text-xs text-gray-400">
-                    {contactMessage.length}/1000
+                  {contactMessage.length}/1000
                 </div>
               </div>
               <button className="w-full bg-primary-container text-white px-8 py-4 rounded-full font-button text-button hover:bg-tertiary transition-colors" type="submit">
@@ -275,7 +302,7 @@ const LandingPage = () => {
               </button>
             </form>
           </div>
-        </section>
+        </motion.section>
       </main>
 
       {/* Footer */}
@@ -285,7 +312,7 @@ const LandingPage = () => {
             <div className="md:col-span-5">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-8 h-8 bg-gradient-to-br from-[#10B981] to-[#059669] rounded-lg flex items-center justify-center">
-                    <span className="material-symbols-outlined text-white text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
+                  <span className="material-symbols-outlined text-white text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
                 </div>
                 <span className="font-['Outfit'] text-2xl font-black text-white tracking-tight">YTECH<span className="text-[#10B981]">.</span></span>
               </div>
@@ -301,7 +328,7 @@ const LandingPage = () => {
                 </button>
               </div>
             </div>
-            
+
             <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
               <div>
                 <h4 className="font-bold mb-4">Solutions</h4>
@@ -333,7 +360,7 @@ const LandingPage = () => {
           </div>
           <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
             <p>© 2026 YTECH Solutions. All rights reserved.</p>
-            <p>Made with <span className="text-[#10B981]">♥</span> for growing businesses.</p>
+            <p>Made with <span className="text-[#10B981]">♥</span> By Zaikos.</p>
           </div>
         </div>
       </footer>
@@ -342,129 +369,129 @@ const LandingPage = () => {
       {showLoginModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="bg-surface-container-lowest rounded-3xl w-full max-w-md overflow-hidden shadow-2xl relative">
-            <button 
+            <button
               onClick={() => setShowLoginModal(false)}
               className="absolute top-4 right-4 text-outline hover:text-on-surface"
             >
               <span className="material-symbols-outlined">close</span>
             </button>
-            
+
             {isSignupMode ? (
-                /* --- SIGN UP MODAL --- */
-                <>
-                    <div className="px-8 pt-10 pb-6 text-center">
-                        <span className="material-symbols-outlined text-secondary text-4xl mb-4">person_add</span>
-                        <h2 className="font-headline-md text-headline-md text-primary">Create Your Account</h2>
-                        <p className="font-body-md text-body-md text-on-surface-variant mt-2">Get access to premium web packages</p>
+              /* --- SIGN UP MODAL --- */
+              <>
+                <div className="px-8 pt-10 pb-6 text-center">
+                  <span className="material-symbols-outlined text-secondary text-4xl mb-4">person_add</span>
+                  <h2 className="font-headline-md text-headline-md text-primary">Create Your Account</h2>
+                  <p className="font-body-md text-body-md text-on-surface-variant mt-2">Get access to premium web packages</p>
+                </div>
+                <div className="px-8 pb-8">
+                  <form onSubmit={handleSignup} className="space-y-5">
+                    <div>
+                      <label className="block font-label-sm text-label-sm text-primary mb-2">Full Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest"
+                        placeholder="John Doe"
+                      />
                     </div>
-                    <div className="px-8 pb-8">
-                        <form onSubmit={handleSignup} className="space-y-5">
-                            <div>
-                                <label className="block font-label-sm text-label-sm text-primary mb-2">Full Name</label>
-                                <input 
-                                    type="text" 
-                                    required
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                    className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" 
-                                    placeholder="John Doe" 
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-label-sm text-label-sm text-primary mb-2">Corporate Email</label>
-                                <input 
-                                    type="email" 
-                                    required
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" 
-                                    placeholder="name@company.com" 
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-label-sm text-label-sm text-primary mb-2">Company Name</label>
-                                <input 
-                                    type="text" 
-                                    required
-                                    value={companyName}
-                                    onChange={(e) => setCompanyName(e.target.value)}
-                                    className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" 
-                                    placeholder="Acme Corp" 
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-label-sm text-label-sm text-primary mb-2">Password</label>
-                                <input 
-                                    type="password" 
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" 
-                                    placeholder="••••••••" 
-                                />
-                            </div>
-                            <button type="submit" className="w-full bg-[#10B981] text-white py-3 rounded-full font-button hover:bg-secondary transition-colors mt-2">
-                                Create Account
-                            </button>
-                        </form>
+                    <div>
+                      <label className="block font-label-sm text-label-sm text-primary mb-2">Corporate Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest"
+                        placeholder="name@company.com"
+                      />
                     </div>
-                    <div className="px-8 py-6 bg-surface-container-low border-t border-slate-200 text-center">
-                        <p className="font-body-md text-body-md text-on-surface-variant">
-                            Already have an account? 
-                            <button onClick={() => setIsSignupMode(false)} className="ml-1 font-label-sm text-label-sm text-[#10B981] hover:opacity-80 transition-opacity font-bold">Log in</button>
-                        </p>
+                    <div>
+                      <label className="block font-label-sm text-label-sm text-primary mb-2">Company Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest"
+                        placeholder="Acme Corp"
+                      />
                     </div>
-                </>
+                    <div>
+                      <label className="block font-label-sm text-label-sm text-primary mb-2">Password</label>
+                      <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                    <button type="submit" className="w-full bg-[#10B981] text-white py-3 rounded-full font-button hover:bg-secondary transition-colors mt-2">
+                      Create Account
+                    </button>
+                  </form>
+                </div>
+                <div className="px-8 py-6 bg-surface-container-low border-t border-slate-200 text-center">
+                  <p className="font-body-md text-body-md text-on-surface-variant">
+                    Already have an account?
+                    <button onClick={() => setIsSignupMode(false)} className="ml-1 font-label-sm text-label-sm text-[#10B981] hover:opacity-80 transition-opacity font-bold">Log in</button>
+                  </p>
+                </div>
+              </>
             ) : (
-                /* --- LOGIN MODAL --- */
-                <>
-                    <div className="p-10">
-                        <div className="text-center mb-8">
-                            <span className="material-symbols-outlined text-secondary text-4xl mb-4">lock</span>
-                            <h2 className="font-headline-md text-headline-md text-primary">Welcome Back</h2>
-                            <p className="font-body-md text-body-md text-on-surface-variant mt-2">Sign in to Ytech Solutions</p>
-                        </div>
-                        <form onSubmit={handleLogin} className="space-y-6">
-                            <div>
-                            <label className="block font-label-sm text-label-sm text-primary mb-2">Username or Email</label>
-                            <input 
-                                type="text" 
-                                required
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" 
-                                placeholder="Enter your username" 
-                            />
-                            </div>
-                            <div>
-                            <label className="block font-label-sm text-label-sm text-primary mb-2">Password</label>
-                            <input 
-                                type="password" 
-                                required
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest" 
-                                placeholder="••••••••" 
-                            />
-                            </div>
-                            <button type="submit" className="w-full bg-[#10B981] text-white py-3 rounded-full font-button hover:bg-secondary transition-colors">
-                            Sign In
-                            </button>
-                            
-                            <div className="text-center mt-6">
-                                <p className="font-label-sm text-label-sm text-outline">
-                                    Demo: admin/admin123, sarah/sarah123, client1/client123
-                                </p>
-                            </div>
-                        </form>
+              /* --- LOGIN MODAL --- */
+              <>
+                <div className="p-10">
+                  <div className="text-center mb-8">
+                    <span className="material-symbols-outlined text-secondary text-4xl mb-4">lock</span>
+                    <h2 className="font-headline-md text-headline-md text-primary">Welcome Back</h2>
+                    <p className="font-body-md text-body-md text-on-surface-variant mt-2">Sign in to Ytech Solutions</p>
+                  </div>
+                  <form onSubmit={handleLogin} className="space-y-6">
+                    <div>
+                      <label className="block font-label-sm text-label-sm text-primary mb-2">Username or Email</label>
+                      <input
+                        type="text"
+                        required
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest"
+                        placeholder="Enter your username"
+                      />
                     </div>
-                    <div className="px-8 py-6 bg-surface-container-low border-t border-slate-200 text-center">
-                        <p className="font-body-md text-body-md text-on-surface-variant">
-                            Don't have an account? 
-                            <button onClick={() => setIsSignupMode(true)} className="ml-1 font-label-sm text-label-sm text-[#10B981] hover:opacity-80 transition-opacity font-bold">Sign up</button>
-                        </p>
+                    <div>
+                      <label className="block font-label-sm text-label-sm text-primary mb-2">Password</label>
+                      <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full border border-outline-variant rounded-xl px-4 py-3 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] bg-surface-container-lowest"
+                        placeholder="••••••••"
+                      />
                     </div>
-                </>
+                    <button type="submit" className="w-full bg-[#10B981] text-white py-3 rounded-full font-button hover:bg-secondary transition-colors">
+                      Sign In
+                    </button>
+
+                    <div className="text-center mt-6">
+                      <p className="font-label-sm text-label-sm text-outline">
+                        Demo: admin/admin123, sarah/sarah123, client1/client123
+                      </p>
+                    </div>
+                  </form>
+                </div>
+                <div className="px-8 py-6 bg-surface-container-low border-t border-slate-200 text-center">
+                  <p className="font-body-md text-body-md text-on-surface-variant">
+                    Don't have an account?
+                    <button onClick={() => setIsSignupMode(true)} className="ml-1 font-label-sm text-label-sm text-[#10B981] hover:opacity-80 transition-opacity font-bold">Sign up</button>
+                  </p>
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -472,18 +499,20 @@ const LandingPage = () => {
 
       {/* Checkout Modal */}
       {showCheckoutModal && selectedPackage && (
-          <CheckoutModal 
-              packageDetails={selectedPackage} 
-              onClose={() => {
-                  setShowCheckoutModal(false);
-                  setSelectedPackage(null);
-              }}
-              onCheckoutSuccess={() => {
-                  setShowCheckoutModal(false);
-                  navigate('/client');
-              }}
-          />
+        <CheckoutModal
+          packageDetails={selectedPackage}
+          onClose={() => {
+            setShowCheckoutModal(false);
+            setSelectedPackage(null);
+          }}
+          onCheckoutSuccess={() => {
+            setShowCheckoutModal(false);
+            navigate('/client');
+          }}
+        />
       )}
+
+      <ChatBot />
     </div>
   );
 };

@@ -8,6 +8,57 @@ const ManagerDashboard = () => {
     const [selectedProject, setSelectedProject] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const [projectData, setProjectData] = useState({
+        designImages: '',
+        devProgress: { database: 0, frontend: 0, backend: 0 },
+        liveUrl: '',
+        questionnaire: null
+    });
+
+    useEffect(() => {
+        if (selectedProject) {
+            try {
+                const parsed = typeof selectedProject.project_data === 'string' 
+                    ? JSON.parse(selectedProject.project_data) 
+                    : (selectedProject.project_data || {});
+                
+                setProjectData({
+                    designImages: parsed.designImages || '',
+                    devProgress: parsed.devProgress || { database: 0, frontend: 0, backend: 0 },
+                    liveUrl: parsed.liveUrl || '',
+                    questionnaire: parsed.questionnaire || null
+                });
+            } catch (e) {
+                setProjectData({ designImages: '', devProgress: { database: 0, frontend: 0, backend: 0 }, liveUrl: '', questionnaire: null });
+            }
+        }
+    }, [selectedProject]);
+
+    const handleSaveProjectData = async () => {
+        try {
+            const token = localStorage.getItem('ytech_token');
+            const res = await fetch('/api/manager/update-project-data', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ 
+                    projectId: selectedProject.id, 
+                    projectData 
+                })
+            });
+            if (res.ok) {
+                alert("Project data saved successfully!");
+                fetchProjects();
+            } else {
+                alert("Failed to save project data");
+            }
+        } catch (err) {
+            console.error("Failed to save data", err);
+        }
+    };
+
     const steps = [
         { id: 1, label: 'Payment Confirmed', icon: 'check_circle' },
         { id: 2, label: 'Requirements Gathering', icon: 'assignment' },
@@ -19,7 +70,7 @@ const ManagerDashboard = () => {
     const fetchProjects = async () => {
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/manager/projects', {
+            const res = await fetch('/api/manager/projects', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -43,7 +94,7 @@ const ManagerDashboard = () => {
         
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/manager/update-phase', {
+            const res = await fetch('/api/manager/update-phase', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -61,6 +112,30 @@ const ManagerDashboard = () => {
             }
         } catch (err) {
             console.error("Failed to update phase", err);
+        }
+    };
+
+    const handleStepBackPhase = async () => {
+        if (!selectedProject || selectedProject.current_phase <= 1) return;
+        try {
+            const token = localStorage.getItem('ytech_token');
+            const res = await fetch('/api/manager/update-phase', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ 
+                    projectId: selectedProject.id, 
+                    newPhase: selectedProject.current_phase - 1 
+                })
+            });
+            if (res.ok) {
+                setSelectedProject({ ...selectedProject, current_phase: selectedProject.current_phase - 1 });
+                fetchProjects();
+            }
+        } catch (err) {
+            console.error("Failed to step back phase", err);
         }
     };
 
@@ -205,16 +280,102 @@ const ManagerDashboard = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        {selectedProject.current_phase < 5 && (
-                                            <button 
-                                                onClick={handleUpdatePhase}
-                                                className="w-full md:w-auto bg-[#10B981] text-white px-8 py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-[#0d9469] transition-all transform hover:scale-[1.02] shadow-md"
-                                            >
-                                                <span className="material-symbols-outlined">sync</span>
-                                                Advance Phase
-                                            </button>
-                                        )}
+                                        <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+                                            {selectedProject.current_phase > 1 && (
+                                                <button 
+                                                    onClick={handleStepBackPhase}
+                                                    className="w-full md:w-auto bg-gray-100 text-gray-700 border border-gray-300 px-6 py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-gray-200 transition-all shadow-sm"
+                                                >
+                                                    <span className="material-symbols-outlined">undo</span>
+                                                    Step Back
+                                                </button>
+                                            )}
+                                            {selectedProject.current_phase < 5 && (
+                                                <button 
+                                                    onClick={handleUpdatePhase}
+                                                    className="w-full md:w-auto bg-[#10B981] text-white px-8 py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-[#0d9469] transition-all transform hover:scale-[1.02] shadow-md"
+                                                >
+                                                    <span className="material-symbols-outlined">sync</span>
+                                                    Advance Phase
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
+
+                                    {/* Dynamic Project Data */}
+                                    {selectedProject.current_phase >= 2 && (
+                                        <div className="mt-6 bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col gap-6">
+                                            <h3 className="font-bold text-lg text-[#091426]">Project Deliverables (Visible to Client)</h3>
+                                            
+                                            {selectedProject.current_phase === 2 && (
+                                                <div className="flex flex-col gap-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                                    <h4 className="font-bold text-blue-900 flex items-center gap-2"><span className="material-symbols-outlined">assignment</span> Client Questionnaire Answers</h4>
+                                                    {projectData.questionnaire ? (
+                                                        <div className="flex flex-col gap-3">
+                                                            <div><span className="font-semibold text-sm text-blue-800">Goal:</span> <p className="text-sm bg-white p-2 rounded border border-blue-50 mt-1">{projectData.questionnaire.q1 || 'N/A'}</p></div>
+                                                            <div><span className="font-semibold text-sm text-blue-800">Audience:</span> <p className="text-sm bg-white p-2 rounded border border-blue-50 mt-1">{projectData.questionnaire.q2 || 'N/A'}</p></div>
+                                                            <div><span className="font-semibold text-sm text-blue-800">Competitors:</span> <p className="text-sm bg-white p-2 rounded border border-blue-50 mt-1">{projectData.questionnaire.q3 || 'N/A'}</p></div>
+                                                        </div>
+                                                    ) : (
+                                                        <p className="text-sm text-blue-600 italic">Client hasn't submitted yet.</p>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {selectedProject.current_phase === 3 && (
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-sm font-semibold text-gray-700">Design Mockup Image URL</label>
+                                                    <input 
+                                                        type="text" 
+                                                        className="border border-gray-300 rounded-lg px-4 py-2" 
+                                                        placeholder="https://imgur.com/your-image.png"
+                                                        value={projectData.designImages}
+                                                        onChange={(e) => setProjectData({...projectData, designImages: e.target.value})}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {selectedProject.current_phase === 4 && (
+                                                <div className="flex flex-col gap-4">
+                                                    <label className="text-sm font-semibold text-gray-700">Development Progress (%)</label>
+                                                    <div className="grid grid-cols-3 gap-4">
+                                                        <div>
+                                                            <span className="text-xs text-gray-500 block mb-1">Database</span>
+                                                            <input type="number" min="0" max="100" className="w-full border border-gray-300 rounded-lg px-4 py-2" value={projectData.devProgress.database || 0} onChange={(e) => setProjectData({...projectData, devProgress: {...projectData.devProgress, database: parseInt(e.target.value) || 0}})} />
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-xs text-gray-500 block mb-1">Frontend</span>
+                                                            <input type="number" min="0" max="100" className="w-full border border-gray-300 rounded-lg px-4 py-2" value={projectData.devProgress.frontend || 0} onChange={(e) => setProjectData({...projectData, devProgress: {...projectData.devProgress, frontend: parseInt(e.target.value) || 0}})} />
+                                                        </div>
+                                                        <div>
+                                                            <span className="text-xs text-gray-500 block mb-1">Backend</span>
+                                                            <input type="number" min="0" max="100" className="w-full border border-gray-300 rounded-lg px-4 py-2" value={projectData.devProgress.backend || 0} onChange={(e) => setProjectData({...projectData, devProgress: {...projectData.devProgress, backend: parseInt(e.target.value) || 0}})} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {selectedProject.current_phase === 5 && (
+                                                <div className="flex flex-col gap-2">
+                                                    <label className="text-sm font-semibold text-gray-700">Live Website URL</label>
+                                                    <input 
+                                                        type="text" 
+                                                        className="border border-gray-300 rounded-lg px-4 py-2" 
+                                                        placeholder="https://client-new-website.com"
+                                                        value={projectData.liveUrl}
+                                                        onChange={(e) => setProjectData({...projectData, liveUrl: e.target.value})}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            <button 
+                                                onClick={handleSaveProjectData}
+                                                className="self-end bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold transition-colors"
+                                            >
+                                                Save Deliverables
+                                            </button>
+                                        </div>
+                                    )}
 
                                     {/* Project Chat UI */}
                                     <div className="mt-8">

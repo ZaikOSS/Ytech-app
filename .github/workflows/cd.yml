@@ -1,0 +1,66 @@
+name: CD Pipeline
+
+# 1. Trigger only after the CI workflow completes successfully
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    # 2. Run on self-hosted runner
+    runs-on: self-hosted
+    
+    # Ensure this job only runs if the CI Pipeline actually succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      # 3. & 4. Checkout the latest code and pull repository changes
+      - name: 📥 Checkout latest code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # NEW IMPROVEMENT: Securely inject environment variables from GitHub Secrets
+      - name: 🔐 Inject Environment Secrets
+        run: |
+          echo "==> Creating secure .env file for the backend..."
+          # Replace these with your actual secret names in GitHub Settings -> Secrets
+          echo "PORT=${{ secrets.PORT }}" > backend/.env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> backend/.env
+          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> backend/.env
+          echo "STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}" >> backend/.env
+          echo "STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}" >> backend/.env
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> backend/.env
+          echo "DB_HOST=db" >> backend/.env
+
+      # 5. & 6. Build the new images in the background (Zero-Downtime Approach)
+      - name: 🏗️ Rebuild Docker images
+        run: |
+          echo "==> Building updated Docker images (pulling latest if available)..."
+          # This builds the new images WHILE the old containers are still running, 
+          # preventing your app from going offline during the long build process.
+          docker compose build --pull
+
+      # 7. Gracefully restart only what changed
+      - name: 🚀 Start updated containers
+        run: |
+          echo "==> Starting containers in detached mode..."
+          # Compose will automatically stop the old containers and start the new ones
+          # in a matter of seconds, achieving near-zero downtime.
+          docker compose up -d
+          echo "==> Application is now running!"
+
+      # 8. Remove unused Docker images and containers to save disk space
+      - name: 🧹 Clean up unused Docker resources
+        # We use 'always()' so cleanup happens even if a previous step failed
+        if: always() 
+        run: |
+          echo "==> Removing unused images, stopped containers, and dangling networks..."
+          # prune -f forces cleanup without interactive prompt
+          docker system prune -f

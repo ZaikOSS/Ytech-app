@@ -14,6 +14,7 @@ const AdminDashboard = () => {
     const [managerModal, setManagerModal] = useState({ isOpen: false, mode: 'CREATE', manager: null });
     const [managerForm, setManagerForm] = useState({ full_name: '', username: '', password: '' });
     const [loading, setLoading] = useState(true);
+    const [currentProjectPage, setCurrentProjectPage] = useState(1);
 
     const steps = [
         { id: 1, label: 'Payment Confirmed' },
@@ -27,10 +28,10 @@ const AdminDashboard = () => {
         try {
             const token = localStorage.getItem('ytech_token');
             const [projRes, mgrRes, mgrAllRes, inqRes] = await Promise.all([
-                fetch('http://localhost:3001/api/admin/projects', { headers: { 'Authorization': `Bearer ${token}` } }),
-                fetch('http://localhost:3001/api/admin/managers', { headers: { 'Authorization': `Bearer ${token}` } }),
-                fetch('http://localhost:3001/api/admin/managers/all', { headers: { 'Authorization': `Bearer ${token}` } }),
-                fetch('http://localhost:3001/api/admin/inquiries', { headers: { 'Authorization': `Bearer ${token}` } })
+                fetch('/api/admin/projects', { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch('/api/admin/managers', { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch('/api/admin/managers/all', { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch('/api/admin/inquiries', { headers: { 'Authorization': `Bearer ${token}` } })
             ]);
             
             const projData = await projRes.json();
@@ -38,7 +39,7 @@ const AdminDashboard = () => {
             const mgrAllData = await mgrAllRes.json();
             const inqData = await inqRes.json();
             
-            setProjects(projData);
+            setProjects(projData.sort((a, b) => b.id - a.id));
             setManagers(mgrData);
             setAllManagers(mgrAllData);
             setInquiries(inqData);
@@ -57,7 +58,7 @@ const AdminDashboard = () => {
         if (!selectedProjectId || !selectedManagerId) return;
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch('http://localhost:3001/api/admin/assign', {
+            const res = await fetch('/api/admin/assign', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -82,7 +83,7 @@ const AdminDashboard = () => {
     const handleMarkRead = async (id) => {
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch(`http://localhost:3001/api/admin/inquiries/${id}/read`, {
+            const res = await fetch(`/api/admin/inquiries/${id}/read`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -96,7 +97,7 @@ const AdminDashboard = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('ytech_token');
-            const url = managerModal.mode === 'CREATE' ? 'http://localhost:3001/api/admin/managers' : `http://localhost:3001/api/admin/managers/${managerModal.manager.id}`;
+            const url = managerModal.mode === 'CREATE' ? '/api/admin/managers' : `/api/admin/managers/${managerModal.manager.id}`;
             const method = managerModal.mode === 'CREATE' ? 'POST' : 'PUT';
             const res = await fetch(url, {
                 method,
@@ -119,7 +120,7 @@ const AdminDashboard = () => {
         if (!window.confirm("Are you sure you want to delete this manager? Any assigned projects will be unassigned.")) return;
         try {
             const token = localStorage.getItem('ytech_token');
-            const res = await fetch(`http://localhost:3001/api/admin/managers/${id}`, {
+            const res = await fetch(`/api/admin/managers/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -144,6 +145,12 @@ const AdminDashboard = () => {
 
     const unassignedCount = projects.filter(p => !p.manager_name).length;
     const selectedProject = projects.find(p => p.id === selectedProjectId);
+
+    const projectsPerPage = 8;
+    const indexOfLastProject = currentProjectPage * projectsPerPage;
+    const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+    const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
+    const totalProjectPages = Math.ceil(projects.length / projectsPerPage);
 
     return (
         <div className="bg-[#f7f9fb] text-[#191c1e] min-h-screen flex flex-col font-sans">
@@ -172,6 +179,12 @@ const AdminDashboard = () => {
                         >
                             Manager Accounts
                         </button>
+                        <button 
+                            onClick={() => setCurrentView('inquiries')}
+                            className={`font-bold pb-2 transition-colors border-b-2 ${currentView === 'inquiries' ? 'border-[#10B981] text-[#10B981]' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
+                        >
+                            Incoming Inquiries
+                        </button>
                     </nav>
                     <div className="w-8 h-8 rounded-full bg-blue-800 text-white flex items-center justify-center font-bold">
                         A
@@ -184,7 +197,7 @@ const AdminDashboard = () => {
             </header>
 
             <main className="flex-1 p-10 max-w-[1280px] mx-auto w-full space-y-10">
-                {currentView === 'overview' ? (
+                {currentView === 'overview' && (
                 <>
                 {/* HEADER SUMMARY METRICS */}
                 <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -226,7 +239,7 @@ const AdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-[#eceef0]">
-                                    {projects.map(p => {
+                                    {currentProjects.map(p => {
                                         const isSelected = selectedProjectId === p.id;
                                         const phaseLabel = steps[p.current_phase - 1]?.label || 'Pending';
                                         
@@ -260,6 +273,34 @@ const AdminDashboard = () => {
                                 </tbody>
                             </table>
                         </div>
+                        {/* Pagination Controls */}
+                        {totalProjectPages > 1 && (
+                            <div className="flex items-center justify-center gap-2 mt-4">
+                                <button 
+                                    onClick={() => setCurrentProjectPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentProjectPage === 1}
+                                    className="px-4 py-2 rounded-lg font-bold text-sm bg-white border border-[#c5c6cd] text-[#45474c] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Previous
+                                </button>
+                                {Array.from({ length: totalProjectPages }, (_, i) => i + 1).map(pageNumber => (
+                                    <button
+                                        key={pageNumber}
+                                        onClick={() => setCurrentProjectPage(pageNumber)}
+                                        className={`w-10 h-10 rounded-lg font-bold text-sm transition-colors ${currentProjectPage === pageNumber ? 'bg-blue-600 text-white shadow-md' : 'bg-white border border-[#c5c6cd] text-[#45474c] hover:bg-gray-50'}`}
+                                    >
+                                        {pageNumber}
+                                    </button>
+                                ))}
+                                <button 
+                                    onClick={() => setCurrentProjectPage(prev => Math.min(prev + 1, totalProjectPages))}
+                                    disabled={currentProjectPage === totalProjectPages}
+                                    className="px-4 py-2 rounded-lg font-bold text-sm bg-white border border-[#c5c6cd] text-[#45474c] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Assignment Card */}
@@ -312,9 +353,12 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 </section>
+                </>
+                )}
 
-                {/* INQUIRIES SECTION */}
+                {currentView === 'inquiries' && (
                 <section className="space-y-8">
+                    {/* INQUIRIES SECTION */}
                     <h2 className="text-2xl font-bold text-[#091426]">Incoming Contact Inquiries</h2>
                     <div className="bg-white rounded-2xl border border-[#c5c6cd] overflow-hidden shadow-sm">
                         <table className="w-full text-left border-collapse">
@@ -366,8 +410,9 @@ const AdminDashboard = () => {
                         </table>
                     </div>
                 </section>
-                </>
-                ) : (
+                )}
+
+                {currentView === 'managers' && (
                 <section className="space-y-8">
                     <div className="flex items-center justify-between">
                         <h2 className="text-2xl font-bold text-[#091426]">Manager Accounts</h2>

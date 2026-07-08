@@ -7,30 +7,97 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+# Required for CodeQL
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
 jobs:
   build-and-test:
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: 📥 Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Required for secret scanning to check history
 
-    - name: Setup Node.js
+    # --- DEVSECOPS: SECRET SCANNING ---
+    - name: 🔐 Secret Scanning (TruffleHog)
+      uses: trufflesecurity/trufflehog@main
+      # We use continue-on-error so it just prints a warning and doesn't fail your build!
+      continue-on-error: true
+      with:
+        path: ./
+        base: ""
+        head: ${{ github.ref_name }}
+        extra_args: --only-verified
+
+    - name: ⚙️ Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: Verify Backend & Run Tests
+    # --- DEVSECOPS: SCA (SOFTWARE COMPOSITION ANALYSIS) ---
+    - name: 📦 Verify Backend & SCA Scan
       working-directory: ./backend
       run: |
         npm ci
+        echo "==> Running npm audit for Backend..."
+        npm audit --audit-level=high || echo "⚠️ Backend NPM Audit found vulnerabilities (Warning Only)"
+        echo "==> Running Jest Tests..."
         npm test
 
-    - name: Verify Frontend Build
+    - name: 📦 Verify Frontend Build & SCA Scan
       working-directory: ./client
       run: |
         npm ci
+        echo "==> Running npm audit for Frontend..."
+        npm audit --audit-level=high || echo "⚠️ Frontend NPM Audit found vulnerabilities (Warning Only)"
+        echo "==> Building React App..."
         npm run build
 
-    - name: Test Docker Compose Configuration
+    - name: 🏗️ Test Docker Compose Configuration
       run: docker compose build
+
+    # --- DEVSECOPS: CONTAINER & FILESYSTEM SCANNING ---
+    - name: 🐳 Container & Filesystem Scan (Trivy)
+      uses: aquasecurity/trivy-action@master
+      continue-on-error: true # Warning only
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'table'
+        exit-code: '0'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
+
+  # --- DEVSECOPS: SAST (STATIC APPLICATION SECURITY TESTING) ---
+  analyze-codeql:
+    name: Analyze Code (CodeQL)
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    # We use continue-on-error here so if CodeQL finds something, the pipeline still succeeds.
+    continue-on-error: true 
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"

@@ -4,7 +4,10 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const logger = require('./logger');
 require('dotenv').config();
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -13,6 +16,33 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const app = express();
 const port = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret_ytech_key';
+
+// Global error handlers for SOC
+process.on('uncaughtException', (err) => {
+    logger.error('Unexpected exception', { error: err.message, stack: err.stack, type: 'application_exception' });
+});
+process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled rejection', { reason: reason, type: 'application_exception' });
+});
+
+// Setup Morgan to pipe HTTP requests to Winston logger
+const morganFormat = ':method :url :status :res[content-length] - :response-time ms - :remote-addr';
+app.use(morgan(morganFormat, {
+    stream: {
+        write: (message) => logger.info('API Request', { details: message.trim(), type: 'api_request' })
+    }
+}));
+
+// Rate Limiting
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 200, 
+    handler: (req, res, next, options) => {
+        logger.warn('Rate limit exceeded', { ip: req.ip, path: req.path, type: 'rate_limit' });
+        res.status(options.statusCode).send(options.message);
+    }
+});
+app.use('/api', apiLimiter);
 
 // Multer config
 const storage = multer.diskStorage({
@@ -56,7 +86,7 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
             event = JSON.parse(req.body);
         }
     } catch (err) {
-        console.error('Webhook Error:', err.message);
+        logger.error('Webhook signature verification failed', { error: err.message, type: 'webhook_error', ip: req.ip });
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
@@ -91,12 +121,12 @@ app.post('/api/webhook', express.raw({ type: 'application/json' }), async (req, 
                     [invoiceId, name, 'Stripe Checkout', 'N/A', 'N/A', email, 'SUCCESS']
                 );
                 
-                console.log(`Successfully processed Stripe payment for User ID ${userId}`);
+                logger.info('Stripe payment successful', { userId, amount, email, type: 'payment_success' });
             } catch (dbErr) {
-                console.error('Database error fulfilling Stripe order:', dbErr);
+                logger.error('Database error fulfilling Stripe order', { error: dbErr.message, type: 'database_error' });
             }
         } else {
-            console.warn('Received Stripe session without client_reference_id');
+            logger.warn('Received Stripe session without client_reference_id', { type: 'payment_warning' });
         }
     }
 
@@ -137,7 +167,7 @@ app.use('/api', publicRoutes(pool, authenticateToken, genAI));
 
 if (require.main === module) {
   app.listen(port, () => {
-    console.log(`Backend server running on port ${port}`);
+    logger.info(`Backend server running on port ${port}`, { type: 'server_started' });
   });
 }
 

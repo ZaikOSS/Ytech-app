@@ -1,4 +1,5 @@
 const express = require('express');
+const logger = require('../logger');
 
 module.exports = (pool, authenticateToken) => {
     const router = express.Router();
@@ -26,6 +27,7 @@ module.exports = (pool, authenticateToken) => {
         const { projectId, managerId } = req.body;
         try {
             await pool.query('UPDATE Projects SET manager_id = ? WHERE id = ?', [managerId, projectId]);
+            logger.info('Admin assigned manager to project', { adminId: req.user.id, managerId, projectId, ip: req.ip, type: 'admin_action' });
             res.json({ message: 'Manager assigned successfully' });
         } catch (err) {
             console.error(err);
@@ -66,6 +68,7 @@ module.exports = (pool, authenticateToken) => {
             if (existing.length > 0) return res.status(400).json({ error: 'Username already exists' });
             
             await pool.query('INSERT INTO Users (username, password, role, full_name) VALUES (?, ?, "MANAGER", ?)', [username, password, full_name]);
+            logger.info('Manager created by admin', { adminId: req.user.id, newManagerUsername: username, ip: req.ip, type: 'admin_action' });
             res.json({ success: true });
         } catch (err) {
             console.error(err);
@@ -87,6 +90,7 @@ module.exports = (pool, authenticateToken) => {
             } else {
                 await pool.query('UPDATE Users SET username = ?, full_name = ? WHERE id = ? AND role = "MANAGER"', [username, full_name, id]);
             }
+            logger.info('Manager modified by admin', { adminId: req.user.id, targetManagerId: id, ip: req.ip, type: 'admin_action' });
             res.json({ success: true });
         } catch (err) {
             console.error(err);
@@ -100,6 +104,7 @@ module.exports = (pool, authenticateToken) => {
         try {
             await pool.query('UPDATE Projects SET manager_id = NULL WHERE manager_id = ?', [id]);
             await pool.query('DELETE FROM Users WHERE id = ? AND role = "MANAGER"', [id]);
+            logger.info('Manager deleted by admin', { adminId: req.user.id, deletedManagerId: id, ip: req.ip, type: 'admin_action' });
             res.json({ success: true });
         } catch (err) {
             console.error(err);

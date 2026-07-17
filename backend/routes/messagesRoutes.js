@@ -1,4 +1,5 @@
 const express = require('express');
+const logger = require('../logger');
 
 module.exports = (pool, authenticateToken, upload) => {
     const router = express.Router();
@@ -35,8 +36,12 @@ module.exports = (pool, authenticateToken, upload) => {
 
     // 10. Post Message
     router.post('/', authenticateToken, (req, res, next) => {
+        logger.info('File upload started', { userId: req.user.id, type: 'upload_started' });
         upload.single('attachment')(req, res, (err) => {
-            if (err) return res.status(400).json({ error: err.message });
+            if (err) {
+                logger.warn('Malicious or invalid upload blocked', { userId: req.user.id, error: err.message, ip: req.ip, type: 'upload_rejected' });
+                return res.status(400).json({ error: err.message });
+            }
             next();
         });
     }, async (req, res) => {
@@ -60,6 +65,7 @@ module.exports = (pool, authenticateToken, upload) => {
         messageRateLimits[userId] = messageRateLimits[userId].filter(ts => now - ts < 60000);
         
         if (messageRateLimits[userId].length >= 5) {
+            logger.warn('Message rate limit exceeded', { userId, ip: req.ip, type: 'rate_limit' });
             return res.status(429).json({ error: 'Rate limit exceeded. Please wait a minute.' });
         }
 
@@ -77,8 +83,9 @@ module.exports = (pool, authenticateToken, upload) => {
 
             await pool.query('INSERT INTO Messages (project_id, sender_id, message_text, file_url, file_name) VALUES (?, ?, ?, ?, ?)', [projectId, userId, messageText || '', fileUrl, fileName]);
             
-            // Record rate limit
-            messageRateLimits[userId].push(now);
+            if (file) {
+                logger.info('File upload completed', { userId, fileName, fileUrl, type: 'upload_completed' });
+            }
 
             res.json({ success: true, fileUrl, fileName });
         } catch (err) {

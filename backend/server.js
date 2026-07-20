@@ -14,6 +14,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const app = express();
+app.set('trust proxy', true);
 const port = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret_ytech_key';
 

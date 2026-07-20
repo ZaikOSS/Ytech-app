@@ -25,6 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          clean: false
 
       # NEW IMPROVEMENT: Securely inject environment variables from GitHub Secrets
       - name: 🔐 Inject Environment Secrets

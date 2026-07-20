@@ -22,7 +22,7 @@ services:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: rootpassword
     volumes:
-      - ./wazuh_logs/phpmyadmin:/var/log/apache2
+      - ~/wazuh_logs/phpmyadmin:/var/log/apache2
     depends_on:
       - db
 
@@ -37,7 +37,7 @@ services:
       - DB_HOST=db
     volumes:
       - ./backend/uploads:/app/uploads
-      - ./wazuh_logs:/var/log/ytech
+      - ~/wazuh_logs:/var/log/ytech
     depends_on:
       - db
 
@@ -47,7 +47,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./wazuh_logs:/var/log/ytech
+      - ~/wazuh_logs:/var/log/ytech
     depends_on:
       - backend
 

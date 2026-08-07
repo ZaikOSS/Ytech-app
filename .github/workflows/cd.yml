@@ -1,6 +1,5 @@
 name: CD Pipeline
 
-# 1. Trigger only after the CI workflow completes successfully
 on:
   workflow_dispatch:
   workflow_run:
@@ -12,26 +11,21 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to Production
-    # 2. Run on self-hosted runner
+    name: Deploy & DAST Scan
     runs-on: self-hosted
     
-    # Ensure this job only runs if the CI Pipeline actually succeeded
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     steps:
-      # 3. & 4. Checkout the latest code and pull repository changes
       - name: 📥 Checkout latest code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           clean: false
 
-      # NEW IMPROVEMENT: Securely inject environment variables from GitHub Secrets
       - name: 🔐 Inject Environment Secrets
         run: |
           echo "==> Creating secure .env file for the backend..."
-          # Replace these with your actual secret names in GitHub Settings -> Secrets
           echo "PORT=${{ secrets.PORT }}" > backend/.env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> backend/.env
           echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> backend/.env
@@ -40,28 +34,39 @@ jobs:
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> backend/.env
           echo "DB_HOST=db" >> backend/.env
 
-      # 5. & 6. Build the new images in the background (Zero-Downtime Approach)
       - name: 🏗️ Rebuild Docker images
-        run: |
-          echo "==> Building updated Docker images (pulling latest if available)..."
-          # This builds the new images WHILE the old containers are still running, 
-          # preventing your app from going offline during the long build process.
-          docker compose build --pull
+        run: docker compose build --pull
 
-      # 7. Gracefully restart only what changed
       - name: 🚀 Start updated containers
-        run: |
-          echo "==> Starting containers in detached mode..."
-          # Compose will automatically stop the old containers and start the new ones
-          # in a matter of seconds, achieving near-zero downtime.
-          docker compose up -d
-          echo "==> Application is now running!"
+        run: docker compose up -d
 
-      # 8. Remove unused Docker images and containers to save disk space
-      - name: 🧹 Clean up unused Docker resources
-        # We use 'always()' so cleanup happens even if a previous step failed
-        if: always() 
+      # --- DAST (OWASP ZAP) ---
+      - name: 🕷️ OWASP ZAP Baseline Scan (DAST)
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: 'http://localhost:80'
+          fail_action: false # Warning only for now
+          cmd_options: '-J report_json.json -r report_html.html'
+
+      # --- DEFECTDOJO INGESTION ---
+      - name: 📤 Push DAST to DefectDojo API
+        env:
+          DOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
+          DOJO_TOKEN: ${{ secrets.DEFECTDOJO_API_KEY }}
         run: |
-          echo "==> Removing unused images, stopped containers, and dangling networks..."
-          # prune -f forces cleanup without interactive prompt
-          docker system prune -f
+          if [ -z "$DOJO_URL" ] || [ -z "$DOJO_TOKEN" ]; then
+            echo "⚠️ DefectDojo credentials missing. Skipping upload."
+            exit 0
+          fi
+          if [ -f report_json.json ]; then
+            curl -X POST "$DOJO_URL/api/v2/import-scan/" \
+              -H "Authorization: Token $DOJO_TOKEN" \
+              -F "product_name=YTECH-App" -F "engagement_name=CD_Deployment" \
+              -F "scan_type=ZAP Scan" \
+              -F "file=@report_json.json" || true
+          fi
+
+      - name: 🧹 Clean up unused Docker resources
+        if: always() 
+        run: docker system prune -f

@@ -7,7 +7,6 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-# Required for CodeQL
 permissions:
   actions: read
   contents: read
@@ -15,19 +14,21 @@ permissions:
 
 jobs:
   build-and-test:
-    name: Build & Test
+    name: Build, Test & Scan
     runs-on: ubuntu-latest
 
     steps:
     - name: 📥 Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0 # Required for secret scanning to check history
+        fetch-depth: 0
 
-    # --- DEVSECOPS: SECRET SCANNING ---
+    - name: 📁 Create reports directory
+      run: mkdir -p reports
+
+    # --- 1. SECRET SCANNING ---
     - name: 🔐 Secret Scanning (TruffleHog)
       uses: trufflesecurity/trufflehog@main
-      # We use continue-on-error so it just prints a warning and doesn't fail your build!
       continue-on-error: true
       with:
         path: ./
@@ -40,51 +41,65 @@ jobs:
       with:
         node-version: '20'
 
-    # --- DEVSECOPS: SCA (SOFTWARE COMPOSITION ANALYSIS) ---
-    - name: 📦 Verify Backend & SCA Scan
-      working-directory: ./backend
+    # --- 2. SOFTWARE COMPOSITION ANALYSIS (SCA) ---
+    - name: 📦 Install Dependencies & Run Tests
       run: |
-        npm ci
-        echo "==> Running npm audit for Backend..."
-        npm audit --audit-level=high || echo "⚠️ Backend NPM Audit found vulnerabilities (Warning Only)"
-        echo "==> Running Jest Tests..."
-        npm test
+        cd backend && npm ci && npm test
+        cd ../client && npm ci && npm run build
 
-    - name: 📦 Verify Frontend Build & SCA Scan
-      working-directory: ./client
-      run: |
-        npm ci
-        echo "==> Running npm audit for Frontend..."
-        npm audit --audit-level=high || echo "⚠️ Frontend NPM Audit found vulnerabilities (Warning Only)"
-        echo "==> Building React App..."
-        npm run build
+    - name: 📦 OWASP Dependency-Check (SCA)
+      uses: dependency-check/Dependency-Check_Action@main
+      continue-on-error: true
+      with:
+        project: 'YTECH-App'
+        path: '.'
+        format: 'JSON'
+        out: 'reports'
 
-    - name: 🏗️ Test Docker Compose Configuration
+    # --- 3. SAST (Semgrep) ---
+    - name: 🔍 Semgrep Analysis (SAST)
+      uses: returntocorp/semgrep-action@v1
+      continue-on-error: true
+      with:
+        generateSarif: "1"
+    - name: Move Semgrep Report
+      run: mv semgrep.sarif reports/semgrep.sarif || true
+
+    # --- 4. CONTAINER SECURITY (Trivy) ---
+    - name: 🏗️ Build Docker Images
       run: docker compose build
 
-    # --- DEVSECOPS: CONTAINER & FILESYSTEM SCANNING ---
-    - name: 🐳 Container & Filesystem Scan (Trivy)
+    - name: 🐳 Trivy Config Scan (Dockerfile)
       uses: aquasecurity/trivy-action@master
-      continue-on-error: true # Warning only
+      continue-on-error: true
       with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        format: 'table'
-        exit-code: '0'
-        ignore-unfixed: true
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
+        scan-type: 'config'
+        format: 'json'
+        output: 'reports/trivy-config.json'
 
-  # --- DEVSECOPS: SAST (STATIC APPLICATION SECURITY TESTING) ---
+    # Notice: Replace 'ytechsolutions-backend' with your actual image name built by compose
+    - name: 🐳 Trivy Image Scan (Backend)
+      uses: aquasecurity/trivy-action@master
+      continue-on-error: true
+      with:
+        scan-type: 'image'
+        image-ref: 'ytechsolutions-backend:latest'
+        format: 'json'
+        output: 'reports/trivy-backend-image.json'
+
+    - name: ⬆️ Upload Scan Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ci-security-reports
+        path: reports/
+
+  # --- 5. CODEQL (SAST) ---
   analyze-codeql:
     name: Analyze Code (CodeQL)
     runs-on: ubuntu-latest
     needs: build-and-test
-    # We use continue-on-error here so if CodeQL finds something, the pipeline still succeeds.
     continue-on-error: true 
-    
     strategy:
-      fail-fast: false
       matrix:
         language: [ 'javascript' ]
 
@@ -104,8 +119,57 @@ jobs:
         upload: false
         output: sarif-results
 
-    - name: Upload SARIF Artifact
+    - name: ⬆️ Upload CodeQL Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: codeql-sarif
+        name: codeql-report
         path: sarif-results
+
+  # --- 6. DEFECTDOJO INGESTION ---
+  upload-to-defectdojo:
+    name: Ingest Reports to DefectDojo
+    needs: [build-and-test, analyze-codeql]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: 📥 Download all reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-reports
+
+      - name: 📤 Push to DefectDojo API
+        env:
+          DOJO_URL: ${{ secrets.DEFECTDOJO_URL }}
+          DOJO_TOKEN: ${{ secrets.DEFECTDOJO_API_KEY }}
+        run: |
+          if [ -z "$DOJO_URL" ] || [ -z "$DOJO_TOKEN" ]; then
+            echo "⚠️ DefectDojo credentials missing in GitHub Secrets. Skipping upload."
+            exit 0
+          fi
+          
+          # Example curl for Dependency-Check
+          if [ -f all-reports/ci-security-reports/dependency-check-report.json ]; then
+            curl -X POST "$DOJO_URL/api/v2/import-scan/" \
+              -H "Authorization: Token $DOJO_TOKEN" \
+              -F "product_name=YTECH-App" -F "engagement_name=CI_Pipeline" \
+              -F "scan_type=Dependency Check Report" \
+              -F "file=@all-reports/ci-security-reports/dependency-check-report.json"
+          fi
+          
+          # Example curl for Semgrep
+          if [ -f all-reports/ci-security-reports/semgrep.sarif ]; then
+            curl -X POST "$DOJO_URL/api/v2/import-scan/" \
+              -H "Authorization: Token $DOJO_TOKEN" \
+              -F "product_name=YTECH-App" -F "engagement_name=CI_Pipeline" \
+              -F "scan_type=SARIF" \
+              -F "file=@all-reports/ci-security-reports/semgrep.sarif"
+          fi
+
+          # Example curl for Trivy
+          if [ -f all-reports/ci-security-reports/trivy-backend-image.json ]; then
+            curl -X POST "$DOJO_URL/api/v2/import-scan/" \
+              -H "Authorization: Token $DOJO_TOKEN" \
+              -F "product_name=YTECH-App" -F "engagement_name=CI_Pipeline" \
+              -F "scan_type=Trivy Scan" \
+              -F "file=@all-reports/ci-security-reports/trivy-backend-image.json"
+          fi

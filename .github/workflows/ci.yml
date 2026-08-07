@@ -154,7 +154,7 @@ jobs:
               -F "auto_create_context=true" \
               -F "product_type_name=Research and Development" \
               -F "product_name=YTECH-App" -F "engagement_name=CI_Pipeline" \
-              -F "scan_type=Dependency Check Report" \
+              -F "scan_type=Dependency Check Scan" \
               -F "file=@all-reports/ci-security-reports/dependency-check-report.json"
           fi
           

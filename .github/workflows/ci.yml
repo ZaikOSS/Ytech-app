@@ -53,7 +53,7 @@ jobs:
       with:
         project: 'YTECH-App'
         path: '.'
-        format: 'JSON'
+        format: 'XML'
         out: 'reports'
 
     # --- 3. SAST (Semgrep) ---
@@ -148,14 +148,14 @@ jobs:
           fi
           
           # Example curl for Dependency-Check
-          if [ -f all-reports/ci-security-reports/dependency-check-report.json ]; then
+          if [ -f all-reports/ci-security-reports/dependency-check-report.xml ]; then
             curl -X POST "$DOJO_URL/api/v2/import-scan/" \
               -H "Authorization: Token $DOJO_TOKEN" \
               -F "auto_create_context=true" \
               -F "product_type_name=Research and Development" \
               -F "product_name=YTECH-App" -F "engagement_name=CI_Pipeline" \
               -F "scan_type=Dependency Check Scan" \
-              -F "file=@all-reports/ci-security-reports/dependency-check-report.json"
+              -F "file=@all-reports/ci-security-reports/dependency-check-report.xml"
           fi
           
           # Example curl for Semgrep

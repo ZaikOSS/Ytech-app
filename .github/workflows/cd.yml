@@ -50,7 +50,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'http://localhost:80'
           fail_action: false # Warning only for now
-          cmd_options: '-J report_json.json -r report_html.html'
+          cmd_options: '-x report_xml.xml -J report_json.json -r report_html.html'
 
       # --- DEFECTDOJO INGESTION ---
       - name: 📤 Push DAST to DefectDojo API
@@ -62,14 +62,14 @@ jobs:
             echo "⚠️ DefectDojo credentials missing. Skipping upload."
             exit 0
           fi
-          if [ -f report_json.json ]; then
+          if [ -f report_xml.xml ]; then
             curl -X POST "$DOJO_URL/api/v2/import-scan/" \
               -H "Authorization: Token $DOJO_TOKEN" \
               -F "auto_create_context=true" \
               -F "product_type_name=Research and Development" \
               -F "product_name=YTECH-App" -F "engagement_name=CD_Deployment" \
               -F "scan_type=ZAP Scan" \
-              -F "file=@report_json.json" || true
+              -F "file=@report_xml.xml" || true
           fi
 
       - name: 🧹 Clean up unused Docker resources

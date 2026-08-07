@@ -152,6 +152,7 @@ jobs:
             curl -X POST "$DOJO_URL/api/v2/import-scan/" \
               -H "Authorization: Token $DOJO_TOKEN" \
               -F "auto_create_context=true" \
+              -F "product_type_name=Research and Development" \
               -F "product_name=YTECH-App" -F "engagement_name=CI_Pipeline" \
               -F "scan_type=Dependency Check Report" \
               -F "file=@all-reports/ci-security-reports/dependency-check-report.json"
@@ -162,6 +163,7 @@ jobs:
             curl -X POST "$DOJO_URL/api/v2/import-scan/" \
               -H "Authorization: Token $DOJO_TOKEN" \
               -F "auto_create_context=true" \
+              -F "product_type_name=Research and Development" \
               -F "product_name=YTECH-App" -F "engagement_name=CI_Pipeline" \
               -F "scan_type=SARIF" \
               -F "file=@all-reports/ci-security-reports/semgrep.sarif"
@@ -172,6 +174,7 @@ jobs:
             curl -X POST "$DOJO_URL/api/v2/import-scan/" \
               -H "Authorization: Token $DOJO_TOKEN" \
               -F "auto_create_context=true" \
+              -F "product_type_name=Research and Development" \
               -F "product_name=YTECH-App" -F "engagement_name=CI_Pipeline" \
               -F "scan_type=Trivy Scan" \
               -F "file=@all-reports/ci-security-reports/trivy-backend-image.json"

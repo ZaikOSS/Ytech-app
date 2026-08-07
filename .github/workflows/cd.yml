@@ -45,7 +45,7 @@ jobs:
         run: docker compose up -d
 
       - name: 🕷️ OWASP ZAP Baseline Scan (DAST)
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'http://localhost:80'

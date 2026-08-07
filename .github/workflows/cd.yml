@@ -50,7 +50,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: 'http://localhost:80'
           fail_action: false # Warning only for now
-          cmd_options: '-x report_xml.xml -J report_json.json -r report_html.html'
+          cmd_options: '-x report_xml.xml'
 
       # --- DEFECTDOJO INGESTION ---
       - name: 📤 Push DAST to DefectDojo API

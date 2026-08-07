@@ -129,7 +129,7 @@ jobs:
   upload-to-defectdojo:
     name: Ingest Reports to DefectDojo
     needs: [build-and-test, analyze-codeql]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     if: always()
     steps:
       - name: 📥 Download all reports

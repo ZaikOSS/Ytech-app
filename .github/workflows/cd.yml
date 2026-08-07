@@ -9,6 +9,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   deploy:
     name: Deploy & DAST Scan
@@ -41,8 +45,9 @@ jobs:
         run: docker compose up -d
 
       - name: 🕷️ OWASP ZAP Baseline Scan (DAST)
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@master
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           target: 'http://localhost:80'
           fail_action: false # Warning only for now
           cmd_options: '-J report_json.json -r report_html.html'

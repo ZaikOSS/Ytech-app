@@ -13,13 +13,13 @@ DefectDojo is an enterprise-grade vulnerability management tool. Because of its 
    ```
 4. Build and start the platform:
    ```bash
-   # For a standard production-like deployment:
-   ./dc-build.sh
-   ./dc-up-d.sh postgres-redis
+   # For a standard deployment:
+   docker compose build
+   docker compose up -d
    ```
 5. Get your initial Admin credentials:
    ```bash
-   docker-compose logs initializer | grep "Admin password:"
+   docker compose logs initializer | grep "Admin password:"
    ```
 6. Access DefectDojo at `http://<your-server-ip>:8080`.
 7. **Generate API Key:** Log in as `admin`, click on your user profile in the top right, select "API v2 Key", and copy the token.

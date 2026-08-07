@@ -43,6 +43,7 @@ jobs:
       - name: 🕷️ OWASP ZAP Baseline Scan (DAST)
         uses: zaproxy/action-baseline@v0.12.0
         with:
+          token: ''
           target: 'http://localhost:80'
           fail_action: false # Warning only for now
           cmd_options: '-J report_json.json -r report_html.html'
